@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace CommunityPortal.Models
 {
-    public class Conversation
+    public class Tag
     {
         [Key]
         public string Id { get; set; }
         [Required]
         [MaxLength(256)]
-        public string Subject { get; set; }
+        public string Name { get; set; }
 
-        public List<UserConversation> UsersConversations { get; set; }
-        public List<Message> Messages { get; set; }
+        public List<PostTag> PostTags { get; set; }
     }
 }

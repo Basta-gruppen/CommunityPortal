@@ -6,24 +6,25 @@ using System.Threading.Tasks;
 
 namespace CommunityPortal.Models
 {
-    public class Thread
+    public class Event
     {
         [Key]
         public string Id { get; set; }
         [Required]
-        [MaxLength(256)]
-        public string Subject { get; set; }
-        [Required]
-        public string SubForumId { get; set; }
-
-        [Required]
         public string UserId { get; set; }
         [Required]
-        public DateTime TimeStamp { get; set; }
+        [MaxLength(256)]
+        public string Subject { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+        [Required]
+        public DateTime Timestamp { get; set; }
+        [Required]
+        public DateTime StartDate { get; set; }
+
+           
 
         public ApplicationUser User { get; set; }
-        public SubForum SubForum { get; set; }
-
-        public List<Reply> Replies { get; set; }
     }
 }

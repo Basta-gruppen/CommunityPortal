@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace CommunityPortal.Models
 {
-    public class UserGroup
+    public class CategorySubscriber
     {
         [Required]
-        public string GroupId { get; set; }
+        public string CategoryId { get; set; }
         [Required]
         public string UserId { get; set; }
-        public Group Group { get; set; }
 
         public ApplicationUser User { get; set; }
+        public Category Category { get; set; }
     }
 }
