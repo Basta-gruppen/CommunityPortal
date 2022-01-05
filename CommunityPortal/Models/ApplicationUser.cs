@@ -8,6 +8,7 @@ namespace CommunityPortal.Models
 {
     public class ApplicationUser:IdentityUser
     {
+        public string Name { get; set; }
         public string ImageURL { get; set; }
         public List<UserGroup> UserGroups { get; set; } 
         public List<Thread> Threads { get; set; }
