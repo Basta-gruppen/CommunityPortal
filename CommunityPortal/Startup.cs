@@ -30,8 +30,8 @@ namespace CommunityPortal
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
-                //options.UseMySql(Configuarion.GetConnectionString("EkramConnection"))
+                //options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseMySql(Configuration.GetConnectionString("EkramConnection"));
             });
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
