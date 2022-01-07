@@ -9,7 +9,7 @@ namespace CommunityPortal.Models
     public class ApplicationUser : IdentityUser
     {
         public string ImageURL { get; set; }
-        public List<UserGroup> UserGroups { get; set; } 
+        public List<UserGroup> UserGroups { get; set; }
         public List<Thread> Threads { get; set; }
 
         public List<Reply> Replies { get; set; }
