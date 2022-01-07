@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommunityPortal.Models
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string ImageURL { get; set; }
         public List<UserGroup> UserGroups { get; set; } 
