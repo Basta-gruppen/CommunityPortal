@@ -7,9 +7,3 @@ function ToggleCreateContainer(){
         createContainer.attr('hidden', '');
     }
 }
-
-function CreateNewForum(){
-    let nameInput = $('#NewForumName').val();
-    
-    $.post("/Forum/Create", { Name:nameInput });
-}
