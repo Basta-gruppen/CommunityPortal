@@ -63,7 +63,7 @@ namespace CommunityPortal.Controllers
                 }
             };
             
-            forums.AddRange(_context.Forums);
+            forums.AddRange(_context.Forums.Include(f => f.SubForums));
 
             return View(forums);
         }
