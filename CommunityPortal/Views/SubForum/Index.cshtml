@@ -1,0 +1,24 @@
+﻿@model SubForum
+
+@{
+    ViewBag.Title = @Model.Name + " SubForum";
+    Layout = "_Layout";
+}
+
+<div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
+    <div class="border-bottom border-dark border-1">
+        <h5 class="text-dark fw-bold m-0 p-3">@Model.Name</h5>
+    </div>
+    @{
+        foreach (Thread thread in Model.Threads)   
+        {
+            <div class="p-3 border border-bottom border-light">
+                <a class="text-dark fw-bold m-0 mb-1 text-decoration-none" href="#">@thread.Subject</a>
+                <div class="d-flex flex-row justify-content-between">
+                    <small class="text-dark m-0">@thread.User.UserName</small>
+                    <small class="text-dark m-0">@thread.TimeStamp</small>
+                </div>
+            </div>
+        }
+    }
+</div>
