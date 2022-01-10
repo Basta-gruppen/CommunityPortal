@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
     public class ForumController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        
+        public ForumController(ApplicationDbContext applicationDbContext)
+        {
+            _context = applicationDbContext;
+        }
+        
         public IActionResult Index()
         {
             List<Forum> forums = new List<Forum>()
@@ -53,8 +62,34 @@ namespace CommunityPortal.Controllers
                     }
                 }
             };
+            
+            forums.AddRange(_context.Forums);
 
             return View(forums);
+        }
+
+        public IActionResult Create(Forum newForum)
+        {
+            //TODO: Check if forum with name already exists
+            
+            newForum.Id = Guid.NewGuid().ToString();
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(newForum);
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return BadRequest();
         }
         
         
