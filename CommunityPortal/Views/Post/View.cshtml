@@ -1,0 +1,20 @@
+﻿@model Post
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
+    <div class="border-bottom border-dark border-1">
+        <h5 class="text-dark fw-bold m-0 p-3">@Model.Subject</h5>
+    </div>
+    <div class="flex-grow-1 ms-3">
+        @Model.Content
+    </div>
+    <div class="flex-grow-1 ms-3">
+        Authur @Model.User.UserName @Model.Timestamp<br/>
+        Tags
+        @string.Join(", ", Model.PostTags.Select(postTag => postTag.Tag.Name))
+    </div>
+</div>
