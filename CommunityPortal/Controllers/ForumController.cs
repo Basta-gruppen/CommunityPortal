@@ -48,7 +48,7 @@ namespace CommunityPortal.Controllers
                         {
                             Id = Guid.NewGuid().ToString(),
                             Name = "Health & Safety",
-                            Description = "Discussions regard people's health & safety."
+                            Description = "Discussions regarding people's health & safety."
                         }
                     }
                 }
