@@ -13,10 +13,10 @@
 @{
     <div class="d-flex flex-row justify-content-end mb-4">
         <div id="CreateNewForumContainer" hidden>
-            <div class="d-inline-flex flex-row me-3">
-                <input id="NewForumName" placeholder="Name of Forum" class="form-control me-1"/>
-                <button id="CreateNewForum" class="btn btn-success text-white" onclick="CreateNewForum()">&#10003;</button>
-            </div>
+            <form class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "Forum")">
+                <input id="Name" name="Name" placeholder="Name of Forum" class="form-control me-1"/>
+                <button id="CreateNewForum" class="btn btn-success text-white" type="submit">&#10003;</button>
+            </form>
         </div>
         <button class="btn btn-primary" onclick="ToggleCreateContainer()">New Forum</button>
     </div>
