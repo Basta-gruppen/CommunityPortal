@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Forum>
+
+@{
+    ViewBag.Title = "Forum Index";
+    Layout = "_Layout";
+}
+
+@{
+    foreach (Forum forum in Model)
+    {
+        <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
+            <div class="border-bottom border-dark border-1">
+                <h5 class="text-dark fw-bold m-0 p-3">@forum.Name</h5>
+            </div>
+            @{
+                foreach (SubForum subForum in forum.SubForums)   
+                {
+                    <div class="p-3 border border-bottom border-light">
+                        <a class="text-dark fw-bold m-0 mb-1 text-decoration-none" href="#">@subForum.Name</a>
+                        <p class="text-dark m-0 ms-3">@subForum.Description</p>
+                    </div>
+                }
+            }
+        </div>
+    }
+}
