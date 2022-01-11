@@ -65,7 +65,14 @@ namespace CommunityPortal.Controllers
         [Route("/People/{id:int}")]
         public new IActionResult View(int id)
         {
-            return View(_posts.First());
+            var person = _peopleRepository.GetById(id);
+            return View(new PersonViewModel
+            {
+                Id = person.Id,
+                Phone = person.PhoneNumber,
+                Name = person.Name,
+                Languages = LanguageViewModelsFromPerson(person)
+            });
         }
     }
 }
