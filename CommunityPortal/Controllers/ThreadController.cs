@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
@@ -66,6 +67,24 @@ namespace CommunityPortal.Controllers
             };
             
             return View(thread);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            Thread thread = _context.Threads.Find(id);
+            _context.Threads.Remove(thread);
+            
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
