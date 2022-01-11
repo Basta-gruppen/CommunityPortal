@@ -62,7 +62,7 @@ namespace CommunityPortal.Controllers
         }
         
         [HttpGet]
-        [Route("/People/{id:int}")]
+        [Route("/Post/{id:int}")]
         public new IActionResult View(int id)
         {
             throw new System.NotImplementedException();
