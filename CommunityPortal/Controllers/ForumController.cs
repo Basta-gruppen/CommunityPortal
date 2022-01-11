@@ -68,6 +68,7 @@ namespace CommunityPortal.Controllers
             return View(forums);
         }
 
+        [HttpPost]
         public IActionResult Create(Forum newForum)
         {
             //TODO: Check if forum with name already exists
@@ -92,6 +93,7 @@ namespace CommunityPortal.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
         public IActionResult Delete(string id)
         {
             Forum forum = _context.Forums.Find(id);
