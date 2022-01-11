@@ -91,7 +91,22 @@ namespace CommunityPortal.Controllers
             
             return BadRequest();
         }
-        
-        
+
+        public IActionResult Delete(string id)
+        {
+            Forum forum = _context.Forums.Find(id);
+            _context.Forums.Remove(forum);
+            
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
