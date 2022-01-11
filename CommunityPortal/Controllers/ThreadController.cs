@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,13 @@ namespace CommunityPortal.Controllers
 {
     public class ThreadController : Controller
     {
-        // GET
+        private readonly ApplicationDbContext _context;
+
+        public ThreadController(ApplicationDbContext applicationDbContext)
+        {
+            _context = applicationDbContext;
+        }
+        
         public IActionResult Index(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
