@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityPortal.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace CommunityPortal.Data
 {
@@ -36,6 +38,8 @@ namespace CommunityPortal.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            #region Relations
 
             builder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
             builder.Entity<UserGroup>()
@@ -137,6 +141,405 @@ namespace CommunityPortal.Data
                 .HasMany(u => u.Events)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId);
+
+            #endregion
+
+            #region SeedData
+
+            PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+            List<ApplicationUser> applicationUsers = new List<ApplicationUser>()
+            {
+                new ApplicationUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Email = "seeduser@gmail.com",
+                    NormalizedEmail = "SEEDUSER@GMAIL.COM",
+                    UserName = "SeedUser",
+                    NormalizedUserName = "SEEDUSER",
+                    PasswordHash = passwordHasher.HashPassword(null, "password"),
+                    ImageURL = "https://i.pravatar.cc/100?img=2"
+                },
+                new ApplicationUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Email = "seeduser2@gmail.com",
+                    NormalizedEmail = "SEEDUSER2@GMAIL.COM",
+                    UserName = "SeedUser2",
+                    NormalizedUserName = "SEEDUSER2",
+                    PasswordHash = passwordHasher.HashPassword(null, "password"),
+                    ImageURL = "https://i.pravatar.cc/100?img=4"
+                }
+            };
+            builder.Entity<ApplicationUser>().HasData(applicationUsers);
+            
+            List<Category> categories = new List<Category>()
+            {
+                new Category()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Gaming"
+                },
+                new Category()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Health & Safety"
+                }
+            };
+            builder.Entity<Category>().HasData(categories);
+
+            List<CategorySubscriber> categorySubscribers = new List<CategorySubscriber>()
+            {
+                new CategorySubscriber()
+                {
+                    UserId = applicationUsers[0].Id,
+                    CategoryId = categories[0].Id
+                },
+                new CategorySubscriber()
+                {
+                    UserId = applicationUsers[0].Id,
+                    CategoryId = categories[1].Id
+                },
+                new CategorySubscriber()
+                {
+                    UserId = applicationUsers[1].Id,
+                    CategoryId = categories[1].Id
+                }
+            };
+            builder.Entity<CategorySubscriber>().HasData(categorySubscribers);
+
+            Conversation conversation = new Conversation()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Subject = "A cool conversation between seeded users"
+            };
+            builder.Entity<Conversation>().HasData(conversation);
+
+            List<Event> events = new List<Event>()
+            {
+                new Event()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = "Meeting in town centre",
+                    Content = "We will be meeting in the town centre on the specified date.",
+                    UserId = applicationUsers[0].Id,
+                    Timestamp = DateTime.Now,
+                    StartDate = DateTime.Now.AddDays(3)
+                },
+                new Event()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = "Riot at Walmart",
+                    Content = "We will begin a riot on Walmart on the second street",
+                    UserId = applicationUsers[1].Id,
+                    Timestamp = DateTime.Now,
+                    StartDate = DateTime.Now.AddDays(10)
+                }
+            };
+            builder.Entity<Event>().HasData(events);
+
+            List<Forum> forums = new List<Forum>()
+            {
+                new Forum()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Programming"
+                },
+                new Forum()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Gaming"
+                }
+            };
+            builder.Entity<Forum>().HasData(forums);
+
+            List<Group> groups = new List<Group>()
+            {
+                new Group()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Gamers"
+                },
+                new Group()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Programmers"
+                },
+                new Group()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "General"
+                }
+            };
+            builder.Entity<Group>().HasData(groups);
+
+            List<Message> messages = new List<Message>()
+            {
+                new Message()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = applicationUsers[0].Id,
+                    ConversationId = conversation.Id,
+                    Content = "Hello my dear friend, how are you doing?",
+                    TimeStamp = DateTime.Now
+                },
+                new Message()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = applicationUsers[1].Id,
+                    ConversationId = conversation.Id,
+                    Content = "Hi! I'm doing great, thanks for asking!!",
+                    TimeStamp = DateTime.Now.AddHours(3)
+                }
+            };
+            builder.Entity<Message>().HasData(messages);
+
+            List<Post> posts = new List<Post>()
+            {
+                new Post()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = applicationUsers[0].Id,
+                    CategoryId = categories[0].Id,
+                    Subject = "This is my first post (:",
+                    Content = "Thank you so much for reading my first post, it means a lot to me!",
+                    Timestamp = DateTime.Now
+                },
+                new Post()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = applicationUsers[1].Id,
+                    CategoryId = categories[1].Id,
+                    Subject = "So I made my first post today..",
+                    Content = "Hey so I made my first post today, and this it! It's not much but it's something.",
+                    Timestamp = DateTime.Now.AddDays(1).AddHours(13)
+                }
+            };
+            builder.Entity<Post>().HasData(posts);
+
+            List<Tag> tags = new List<Tag>()
+            {
+                new Tag()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "First Post"
+                },
+                new Tag()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Informative"
+                },
+                new Tag()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Casual"
+                }
+            };
+            builder.Entity<Tag>().HasData(tags);
+
+            List<PostTag> postTags = new List<PostTag>()
+            {
+                new PostTag()
+                {
+                    PostId = posts[0].Id,
+                    TagId = tags[0].Id
+                },
+                new PostTag()
+                {
+                    PostId = posts[0].Id,
+                    TagId = tags[1].Id
+                },
+                new PostTag()
+                {
+                    PostId = posts[1].Id,
+                    TagId = tags[0].Id
+                },
+                new PostTag()
+                {
+                    PostId = posts[1].Id,
+                    TagId = tags[2].Id
+                }
+            };
+            builder.Entity<PostTag>().HasData(postTags);
+
+            List<SubForum> subForums = new List<SubForum>()
+            {
+                new SubForum()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ForumId = forums[0].Id,
+                    Name = "C#",
+                    Description = "All programming related to the C# language and it's frameworks"
+                },
+                new SubForum()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ForumId = forums[1].Id,
+                    Name = "League of Legends",
+                    Description = "SubForum about the game League of Legends"
+                },
+                new SubForum()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ForumId = forums[1].Id,
+                    Name = "Minecraft",
+                    Description = "Everything about Minecraft"
+                }
+            };
+            builder.Entity<SubForum>().HasData(subForums);
+
+            List<SubForumGroup> subForumGroups = new List<SubForumGroup>()
+            {
+                new SubForumGroup()
+                {
+                    GroupId = groups[0].Id,
+                    SubForumId = subForums[1].Id
+                },
+                new SubForumGroup()
+                {
+                    GroupId = groups[0].Id,
+                    SubForumId = subForums[2].Id
+                },
+                new SubForumGroup()
+                {
+                    GroupId = groups[1].Id,
+                    SubForumId = subForums[0].Id
+                }
+            };
+            builder.Entity<SubForumGroup>().HasData(subForumGroups);
+
+            List<Thread> threads = new List<Thread>()
+            {
+                new Thread()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = "How do I print text?",
+                    UserId = applicationUsers[0].Id,
+                    SubForumId = subForums[0].Id,
+                    TimeStamp = DateTime.Now
+                },
+                new Thread()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = "Why League is the most toxic game",
+                    UserId = applicationUsers[1].Id,
+                    SubForumId = subForums[1].Id,
+                    TimeStamp = DateTime.Now.AddDays(1)
+                },
+                new Thread()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = "Where to find diamonds?",
+                    UserId = applicationUsers[1].Id,
+                    SubForumId = subForums[2].Id,
+                    TimeStamp = DateTime.Now.AddHours(6)
+                }
+            };
+            builder.Entity<Thread>().HasData(threads);
+
+            List<Reply> replies = new List<Reply>()
+            {
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[0].Id,
+                    UserId = applicationUsers[0].Id,
+                    Content = "I've been trying really long to figure how to print text but I just get errors plz help",
+                    TimeStamp = DateTime.Now
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[0].Id,
+                    UserId = applicationUsers[1].Id,
+                    Content = "Use google.",
+                    TimeStamp = DateTime.Now.AddHours(5)
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[1].Id,
+                    UserId = applicationUsers[1].Id,
+                    Content = "This is the most toxic game ever, everybody is just flaming. I QUIT!!!",
+                    TimeStamp = DateTime.Now
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[1].Id,
+                    UserId = applicationUsers[0].Id,
+                    Content = "lol noob",
+                    TimeStamp = DateTime.Now.AddHours(4)
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[1].Id,
+                    UserId = applicationUsers[1].Id,
+                    Content = "COME 1V1 ME",
+                    TimeStamp = DateTime.Now.AddHours(6)
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[2].Id,
+                    UserId = applicationUsers[1].Id,
+                    Content = "I can't find diamonds anywhere, it's really hard :(",
+                    TimeStamp = DateTime.Now
+                },
+                new Reply()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ThreadId = threads[2].Id,
+                    UserId = applicationUsers[1].Id,
+                    Content = "I thinks it's below y-level 12 try that! ((:",
+                    TimeStamp = DateTime.Now.AddHours(2)
+                }
+            };
+            builder.Entity<Reply>().HasData(replies);
+
+            List<UserConversation> userConversations = new List<UserConversation>()
+            {
+                new UserConversation()
+                {
+                    UserId = applicationUsers[0].Id,
+                    ConversationId = conversation.Id
+                },
+                new UserConversation()
+                {
+                    UserId = applicationUsers[1].Id,
+                    ConversationId = conversation.Id
+                }
+            };
+            builder.Entity<UserConversation>().HasData(userConversations);
+
+            List<UserGroup> userGroups = new List<UserGroup>()
+            {
+                new UserGroup()
+                {
+                    UserId = applicationUsers[0].Id,
+                    GroupId = groups[0].Id
+                },
+                new UserGroup()
+                {
+                    UserId = applicationUsers[0].Id,
+                    GroupId = groups[1].Id
+                },
+                new UserGroup()
+                {
+                    UserId = applicationUsers[1].Id,
+                    GroupId = groups[0].Id
+                },
+                new UserGroup()
+                {
+                    UserId = applicationUsers[1].Id,
+                    GroupId = groups[1].Id
+                }
+            };
+            builder.Entity<UserGroup>().HasData(userGroups);
+
+            #endregion
+
         }
+        
     }
 }
