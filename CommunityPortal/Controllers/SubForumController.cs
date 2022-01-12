@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
     public class SubForumController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public SubForumController(ApplicationDbContext applicationDbContext)
+        {
+            _context = applicationDbContext;
+        }
+        
         // GET
         public IActionResult Index(string id)
         {
@@ -14,55 +24,14 @@ namespace CommunityPortal.Controllers
             {
                 return NotFound();
             }
-            
-            SubForum subForum = new SubForum()
-            {
-                Name = "Dummy SubForum",
-                Threads = new List<Thread>()
-                {
-                    new Thread()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Subject = "My first thread!",
-                        User = new ApplicationUser()
-                        {
-                            UserName = "Martynas"
-                        },
-                        TimeStamp = DateTime.Now
-                    },
-                    new Thread()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Subject = "My second thread!",
-                        User = new ApplicationUser()
-                        {
-                            UserName = "Tim"
-                        },
-                        TimeStamp = DateTime.Now
-                    },
-                    new Thread()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Subject = "My third thread!",
-                        User = new ApplicationUser()
-                        {
-                            UserName = "Monika"
-                        },
-                        TimeStamp = DateTime.Now
-                    },
-                    new Thread()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Subject = "My fourth thread!",
-                        User = new ApplicationUser()
-                        {
-                            UserName = "Ekram"
-                        },
-                        TimeStamp = DateTime.Now
-                    }
-                }
-            };
-            
+
+            SubForum subForum = _context.SubForums
+                .Include(sf => sf.Threads)
+                .ThenInclude(t => t.User)
+                .FirstOrDefault(sf => sf.Id == id);
+
+            subForum.Threads = subForum.Threads.OrderByDescending(t => t.TimeStamp).ToList();
+
             return View(subForum);
         }
     }
