@@ -25,6 +25,21 @@ namespace CommunityPortal.Controllers
             return View(forums);
         }
 
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            Forum forum = _context.Forums
+                .Include(f => f.SubForums)
+                .FirstOrDefault(f => f.Id == id);
+
+            if (forum == null)
+            {
+                return NotFound();
+            }
+
+            return View(forum);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Forum newForum)

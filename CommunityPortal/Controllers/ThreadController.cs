@@ -34,8 +34,36 @@ namespace CommunityPortal.Controllers
             
             return View(thread);
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Thread newThread)
+        {
+            // TODO: Remove line below because user needs to be logged in to create
+            newThread.UserId = _context.Users.ToList()[0].Id;
+            
+            newThread.Id = Guid.NewGuid().ToString();
+
+            if (ModelState.IsValid)
+            {
+                _context.Threads.Add(newThread);
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return BadRequest("Model state not valid");
+        }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
         {
             Thread thread = _context.Threads.Find(id);
