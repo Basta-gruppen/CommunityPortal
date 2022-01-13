@@ -1,0 +1,15 @@
+﻿@model Message
+@{
+    ViewData["Title"] = "CreateConversation";
+}
+
+
+<div class="border-4 d-sm-flex"  id="getMessage"></div>
+<div class="accordion-item">
+    <input id="message" name="username" placeholder="type" />
+    <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
+
+   
+</div>
+<br />
+<div class="accordion-button"><a asp-action="Index">Back</a></div>

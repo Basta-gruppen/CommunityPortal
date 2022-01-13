@@ -1,0 +1,21 @@
+﻿@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+    <p>Select User to send private message</p>
+    
+        @foreach (ApplicationUser user in Model)
+        {
+           
+            <div class="container-fluid">
+                <a class="btn-outline-success" asp-action="CreateConversation">@user.UserName</a>
+            </div>
+                <input type="hidden" value="@user.Id" />
+
+         }
+           
+
+          
