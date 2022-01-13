@@ -1,71 +1,101 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
     public class PostController : Controller
     {
-        private readonly List<Post> _posts = new List<Post>
+        private readonly ApplicationDbContext _context;
+
+        public PostController(ApplicationDbContext applicationDbContext)
         {
-            new Post
-            {
-                User = new ApplicationUser
-                {
-                    UserName = "Tim"
-                },
+            _context = applicationDbContext;
+        }
 
-                Id = Guid.NewGuid().ToString(),
-                Subject = "This is a post",
-                PostTags = new List<PostTag>
-                {
-                    new PostTag
-                    {
-                        TagId = Guid.NewGuid().ToString(),
-                        Tag = new Tag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            Name = "Foo"
-                        }
-                    }
-                }
-            },
-            new Post
-            {
-                Id = Guid.NewGuid().ToString(),
-                User = new ApplicationUser
-                {
-                    UserName = "Martinyas"
-                },
-                Subject = "Off-Topic",
-
-                PostTags = new List<PostTag>
-                {
-                    new PostTag
-                    {
-                        TagId = Guid.NewGuid().ToString(),
-                        Tag = new Tag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            Name = "Foo"
-                        }
-                    }
-                }
-            }
-        };
-
+        [HttpGet]
+        [Route("/Posts/")]        
         public IActionResult Index()
         {
-            return View(_posts);
+            return View(
+                _context
+                    .Posts
+                    .Include(post => post.Category)
+                    .Include(post => post.User)
+                    .Include(post => post.PostTags)
+                    .ThenInclude(postTag => postTag.Tag)
+                    .ToList());
         }
         
         [HttpGet]
-        [Route("/Post/{id:int}")]
-        public new IActionResult View(int id)
+        [Route("/Posts/tag/{Tag}")]        
+        public IActionResult Index(string tag)
         {
-            throw new System.NotImplementedException();
+            return View(
+                _context
+                    .Posts
+                    .Include(post => post.Category)
+                    .Include(post => post.User)
+                    .Include(post => post.PostTags)
+                    .ThenInclude(postTag => postTag.Tag)
+                    //                    .ThenInclude(postTag => tag)
+                    .ToList());
+        }
+
+        [HttpGet]
+        [Route("/Post/{id}")]
+        public new IActionResult View(string id)
+        {
+            var post = _context.Posts
+                .Include(post => post.Category)
+                .Include(post => post.User)
+                .Include(post => post.PostTags)
+                .ThenInclude(postTag => postTag.Tag)
+                .FirstOrDefault(post => post.Id == id);
+            if (post == null) return NotFound();
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Post newPost)
+        {
+            newPost.Id = Guid.NewGuid().ToString();
+
+            if (!ModelState.IsValid) return BadRequest("Model state not valid");
+            _context.Posts.Add(newPost);
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(string id)
+        {
+            var post = _context.Posts.Find(id);
+            _context.Posts.Remove(post);
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

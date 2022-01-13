@@ -7,40 +7,24 @@
 
 @section Scripts
 {
-    <script src="js/ForumIndex.js"></script>
+    <script src="~/js/Forum.js"></script>
 }
 
-@{
-    <div class="d-flex flex-row justify-content-end mb-4">
-        <div id="CreateNewForumContainer" hidden>
-            <form class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "Forum")">
-                <input id="Name" name="Name" placeholder="Name of Forum" class="form-control me-1"/>
-                <button id="CreateNewForum" class="btn btn-success text-white" type="submit">&#10003;</button>
-            </form>
-        </div>
-        <button class="btn btn-primary" onclick="ToggleCreateContainer()">New Forum</button>
+<div class="d-flex flex-row justify-content-end mb-4">
+    <div id="CreateNewContainer" hidden>
+        <form id="AjaxForm" class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "Forum")">
+            @Html.AntiForgeryToken()
+            <input id="Name" name="Name" placeholder="Name" class="form-control me-1"/>
+            <button id="ButtonCreateConfirm" class="btn btn-success text-white" type="submit">&#10003;</button>
+        </form>
     </div>
-    
+    <button class="btn btn-primary" onclick="ToggleCreateContainer()">New Forum</button>
+</div>
+
+@{
     foreach (Forum forum in Model)
     {
-        <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
-            <div class="d-flex flex-row justify-content-between align-items-center border-bottom border-dark border-1 p-3">
-                <h5 class="text-dark fw-bold m-0">@forum.Name</h5>
-                <form method="Post" action="@Url.Action("Delete", "Forum")">
-                    <input type="hidden" value="@forum.Id" name="ID"/>
-                    <button class="btn btn-sm btn-danger" type="submit">X</button>
-                </form>
-            </div>
-            @{
-                foreach (SubForum subForum in forum.SubForums)   
-                {
-                    <div class="p-3 border border-bottom border-light">
-                        <a class="text-dark fw-bold m-0 mb-1 text-decoration-none" href="@Url.Action("Index", "SubForum", new { id = subForum.Id })">@subForum.Name</a>
-                        <p class="text-dark m-0 ms-3">@subForum.Description</p>
-                    </div>
-                }
-            }
-        </div>
+        <partial name="_ForumPartial" model="forum"/>
     }
 }
 
