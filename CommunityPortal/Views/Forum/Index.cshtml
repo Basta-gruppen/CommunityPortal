@@ -14,6 +14,7 @@
     <div class="d-flex flex-row justify-content-end mb-4">
         <div id="CreateNewForumContainer" hidden>
             <form class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "Forum")">
+                @Html.AntiForgeryToken()
                 <input id="Name" name="Name" placeholder="Name of Forum" class="form-control me-1"/>
                 <button id="CreateNewForum" class="btn btn-success text-white" type="submit">&#10003;</button>
             </form>
@@ -27,6 +28,7 @@
             <div class="d-flex flex-row justify-content-between align-items-center border-bottom border-dark border-1 p-3">
                 <h5 class="text-dark fw-bold m-0">@forum.Name</h5>
                 <form method="Post" action="@Url.Action("Delete", "Forum")">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" value="@forum.Id" name="ID"/>
                     <button class="btn btn-sm btn-danger" type="submit">X</button>
                 </form>
