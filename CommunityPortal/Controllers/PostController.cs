@@ -2,6 +2,8 @@
 using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
+using CommunityPortal.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,16 +12,20 @@ namespace CommunityPortal.Controllers
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PostController(ApplicationDbContext applicationDbContext)
+        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
             _context = applicationDbContext;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        [Route("/Posts/")]        
+        [Route("/Posts/")]
         public IActionResult Index()
         {
+            ViewBag.Tags = _context.Tags.ToList();
+            ViewBag.Categories = _context.Categories.ToList();
             return View(
                 _context
                     .Posts
@@ -29,11 +35,13 @@ namespace CommunityPortal.Controllers
                     .ThenInclude(postTag => postTag.Tag)
                     .ToList());
         }
-        
+
         [HttpGet]
-        [Route("/Posts/tag/{Tag}")]        
+        [Route("/Posts/tag/{Tag}")]
         public IActionResult Index(string tag)
         {
+            ViewBag.Tags = _context.Tags.ToList();
+            ViewBag.Categories = _context.Categories.ToList();
             return View(
                 _context
                     .Posts
@@ -61,21 +69,29 @@ namespace CommunityPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Post newPost)
+        //TODO: Add functionality to Add tags
+        public IActionResult Create(CreatePostViewModel createViewModel)
         {
-            newPost.Id = Guid.NewGuid().ToString();
+            var newPost = new Post
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = _userManager.GetUserId(User),
+                Subject = createViewModel.Subject,
+                CategoryId = createViewModel.CategoryId,
+                Content = createViewModel.Content,
+                Timestamp = new DateTime()
+            };
 
-            if (!ModelState.IsValid) return BadRequest("Model state not valid");
             _context.Posts.Add(newPost);
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException e)
-            {
-                return BadRequest(e.Message);
-            }
+            _context.SaveChanges();
 
+            foreach (var tagId in createViewModel.Tags)
+                _context.PostTags.Add(new PostTag
+                {
+                    PostId = newPost.Id,
+                    TagId = tagId
+                });
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

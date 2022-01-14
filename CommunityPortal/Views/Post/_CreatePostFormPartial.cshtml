@@ -1,0 +1,27 @@
+@model CommunityPortal.ViewModels.CreatePostViewModel
+
+@using (var form = Html.BeginForm("Create", "Post", FormMethod.Post))
+{
+    @Html.LabelFor(model => model.Subject)
+    @Html.TextBoxFor(model => model.Subject, new {@class = "form-control"})
+    <div class="form-group">
+        <label asp-for="Tags"></label>
+        @{
+            var options = new SelectList(ViewBag.Tags, "Id", "Name");
+        }
+        <select class="form-control" multiple asp-for="Tags" asp-items="@options"></select>
+        <span class="alert-danger" asp-validation-for="Tags"></span>
+    </div>
+    @Html.LabelFor(model => model.CategoryId)
+    @Html.DropDownListFor(model => model.CategoryId,
+        new SelectList(ViewBag.Categories, "Id", "Name"),
+        new {@class = "form-control"})
+    @Html.LabelFor(model => model.Content)
+    <div class="input-group">
+        @Html.TextBoxFor(model => model.Content, new {@class = "form-control"})
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-success">add</button>
+        </div>
+    </div>
+    @Html.ValidationSummary()
+}
