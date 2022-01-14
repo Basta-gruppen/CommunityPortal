@@ -41,7 +41,7 @@ namespace CommunityPortal.Controllers
                     .Include(post => post.User)
                     .Include(post => post.PostTags)
                     .ThenInclude(postTag => postTag.Tag)
-                    //                    .ThenInclude(postTag => tag)
+                    .Where(p => p.PostTags.Any(l => l.Tag.Name.Equals(tag)))
                     .ToList());
         }
 

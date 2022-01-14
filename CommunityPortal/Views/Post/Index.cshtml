@@ -25,7 +25,7 @@
                 @post.Content
             </div>
             <div class="flex-grow-1 ms-3">
-                Authur: @post.User.UserName @post.Timestamp
+                Authur: @post.User.UserName
                 @{
                     if (post.PostTags.Any())
                     {
@@ -37,7 +37,7 @@
                                 class="text-dark fw-bold m-0 p-3"
                                 asp-controller="Post"
                                 asp-action="Index"
-                                asp-route-tag="@post.Id">
+                                asp-route-tag="@postTag.Tag.Name">
                                 @postTag.Tag.Name
                             </a>
                         }
