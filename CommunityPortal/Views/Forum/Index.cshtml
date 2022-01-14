@@ -14,7 +14,7 @@
     <div id="CreateNewContainer" hidden>
         <form id="AjaxForm" class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "Forum")">
             @Html.AntiForgeryToken()
-            <input id="Name" name="Name" placeholder="Name" class="form-control me-1"/>
+            <input id="Name" name="Name" placeholder="Name" class="form-control me-1" required maxlength="255"/>
             <button id="ButtonCreateConfirm" class="btn btn-success text-white" type="submit">&#10003;</button>
         </form>
     </div>
