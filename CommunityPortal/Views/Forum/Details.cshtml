@@ -12,11 +12,11 @@
 
 <div class="d-flex flex-row justify-content-end mb-4">
     <div id="CreateNewContainer" hidden>
-        <form class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "SubForum")">
+        <form id="AjaxForm" class="d-inline-flex flex-row me-3" method="Post" action="@Url.Action("Create", "SubForum")">
             @Html.AntiForgeryToken()
             <input hidden value="@Model.Id" name="ForumId"/>
-            <input id="Name" name="Name" placeholder="Name" class="form-control me-1"/>
-            <input id="Description" name="Description" placeholder="Description" type="text" class="form-control me-1"/>
+            <input id="Name" name="Name" placeholder="Name" class="form-control me-1" required maxlength="255"/>
+            <input id="Description" name="Description" placeholder="Description" type="text" class="form-control me-1" required maxlength="1024"/>
             <button id="ButtonCreateConfirm" class="btn btn-success text-white" type="submit">&#10003;</button>
         </form>
     </div>
