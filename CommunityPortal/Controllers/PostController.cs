@@ -71,7 +71,7 @@ namespace CommunityPortal.Controllers
         
         public IActionResult Create()
         {
-            ViewBag.Tags = _context.Tags.ToList();
+//            ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
             return View();
         }
@@ -97,7 +97,7 @@ namespace CommunityPortal.Controllers
         {
             var newPost = new Post
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = createViewModel.Id?? Guid.NewGuid().ToString(),
                 UserId = _userManager.GetUserId(User),
                 Subject = createViewModel.Subject,
                 CategoryId = createViewModel.CategoryId,
@@ -107,20 +107,49 @@ namespace CommunityPortal.Controllers
 
             _context.Posts.Add(newPost);
             _context.SaveChanges();
-            
-            var tags = JsonConvert
-                .DeserializeObject<List<TagViewModel>>(createViewModel.Tags)
-                .Select(tag => new Tag
+
+            if (!string.IsNullOrEmpty(createViewModel.Tags))
             {
-                Id = Guid.NewGuid().ToString(),
-                Name = tag.value
-            });
-            
-            AddTagsToPost(newPost, tags);
-            
+                var tags = (JsonConvert
+                    .DeserializeObject<List<TagViewModel>>(createViewModel.Tags)
+                    .Select(tag => new Tag
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = tag.value
+                    }));
+
+                AddTagsToPost(newPost, tags);
+            }
+
             return RedirectToAction(nameof(Index));
         }
+        
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var createPostViewModel = new CreatePostViewModel();
+            ViewBag.Categories = _context.Categories.ToList();
+            var post = _context.Posts
+                .Include(post => post.Category)
+                .Include(post => post.User)
+                .Include(post => post.PostTags)
+                .ThenInclude(postTag => postTag.Tag)
+                .FirstOrDefault(post => post.Id == id);
 
+            if (post != null)
+            {
+                createPostViewModel = new CreatePostViewModel
+                {
+                    Id = post.Id,
+                    UserId = _userManager.GetUserId(User),
+                    Subject = post.Subject,
+                    CategoryId = post.CategoryId,
+                    Content = post.Content,
+                };
+            }
+            return View(createPostViewModel);
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
