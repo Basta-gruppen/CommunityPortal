@@ -22,6 +22,8 @@ namespace CommunityPortal.ViewModels
         [Required]
         public string Content { get; set; }
         
-        [Required] public List<string> Tags { get; set; }
+        [Required]
+        public string Tags { get; set; }
+        //public List<string> Tags { get; set; }
     }
 }

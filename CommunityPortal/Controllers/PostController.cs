@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
@@ -6,6 +7,7 @@ using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace CommunityPortal.Controllers
 {
@@ -66,10 +68,31 @@ namespace CommunityPortal.Controllers
             if (post == null) return NotFound();
             return View(post);
         }
+        
+        public IActionResult Create()
+        {
+            ViewBag.Tags = _context.Tags.ToList();
+            ViewBag.Categories = _context.Categories.ToList();
+            return View();
+        }
 
+        private void AddTagsToPost(Post post, IEnumerable<Tag> tags)
+        {
+            foreach (var newTag in tags)
+            {
+                _context.Tags.Add(newTag);
+                _context.SaveChanges();
+                _context.PostTags.Add(new PostTag
+                {
+                    PostId = post.Id,
+                    TagId = newTag.Id
+                });
+                _context.SaveChanges();
+            }            
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //TODO: Add functionality to Add tags
         public IActionResult Create(CreatePostViewModel createViewModel)
         {
             var newPost = new Post
@@ -79,19 +102,22 @@ namespace CommunityPortal.Controllers
                 Subject = createViewModel.Subject,
                 CategoryId = createViewModel.CategoryId,
                 Content = createViewModel.Content,
-                Timestamp = new DateTime()
+                Timestamp = new DateTime(),
             };
 
             _context.Posts.Add(newPost);
             _context.SaveChanges();
-
-            foreach (var tagId in createViewModel.Tags)
-                _context.PostTags.Add(new PostTag
-                {
-                    PostId = newPost.Id,
-                    TagId = tagId
-                });
-            _context.SaveChanges();
+            
+            var tags = JsonConvert
+                .DeserializeObject<List<TagViewModel>>(createViewModel.Tags)
+                .Select(tag => new Tag
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = tag.value
+            });
+            
+            AddTagsToPost(newPost, tags);
+            
             return RedirectToAction(nameof(Index));
         }
 

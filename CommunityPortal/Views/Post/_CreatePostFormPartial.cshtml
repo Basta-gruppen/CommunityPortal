@@ -1,27 +1,49 @@
 @model CommunityPortal.ViewModels.CreatePostViewModel
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="https://unpkg.com/@@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css"/>
 
 @using (var form = Html.BeginForm("Create", "Post", FormMethod.Post))
 {
     @Html.LabelFor(model => model.Subject)
     @Html.TextBoxFor(model => model.Subject, new {@class = "form-control"})
-    <div class="form-group">
-        <label asp-for="Tags"></label>
-        @{
-            var options = new SelectList(ViewBag.Tags, "Id", "Name");
-        }
-        <select class="form-control" multiple asp-for="Tags" asp-items="@options"></select>
-        <span class="alert-danger" asp-validation-for="Tags"></span>
-    </div>
+    
+    @Html.LabelFor(model => model.Tags)
+    @Html.TextBoxFor(model => model.Tags, new {@class = "form-control", @autofocus = "true"})
+    
     @Html.LabelFor(model => model.CategoryId)
     @Html.DropDownListFor(model => model.CategoryId,
         new SelectList(ViewBag.Categories, "Id", "Name"),
         new {@class = "form-control"})
     @Html.LabelFor(model => model.Content)
     <div class="input-group">
-        @Html.TextBoxFor(model => model.Content, new {@class = "form-control"})
+        @Html.TextAreaFor(model => model.Content, new {@class = "form-control"})
         <div class="input-group-append">
             <button type="submit" class="btn btn-success">add</button>
         </div>
     </div>
+    <button type="submit" class="btn btn-success">add</button>
     @Html.ValidationSummary()
 }
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://unpkg.com/@@yaireo/tagify"></script>
+<script src="https://unpkg.com/@@yaireo/tagify@3.1.0/dist/tagify.polyfills.min.js"></script>
+<script>
+    // The DOM element you wish to replace with Tagify
+var input = document.querySelector('input[name=Tags]');
+
+// initialize Tagify on the above input node reference
+new Tagify(input, {
+                      delimiters: ",",
+                      editTags: false,
+                         dropdown: {
+                            enabled: 0,
+                            maxItems: 5
+                         },
+                   });
+/*
+  var quill = new Quill('#Content', {
+    theme: 'snow'
+  });*/
+
+  </script>
