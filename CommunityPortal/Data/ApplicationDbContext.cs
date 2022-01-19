@@ -541,26 +541,6 @@ namespace CommunityPortal.Data
             #endregion
 
         }
-        public override int SaveChanges()
-        {
-            var entries = ChangeTracker
-                .Entries()
-                .Where(e => e.Entity is Event && (
-                        e.State == EntityState.Added
-                        || e.State == EntityState.Modified));
-
-            foreach (var entityEntry in entries)
-            {
-                ((Event)entityEntry.Entity).Timestamp = DateTime.Now;
-
-                if (entityEntry.State == EntityState.Added)
-                {
-                    ((Event)entityEntry.Entity).Timestamp = DateTime.Now;
-                }
-            }
-
-            return base.SaveChanges();
-        }
 
     }
 }
