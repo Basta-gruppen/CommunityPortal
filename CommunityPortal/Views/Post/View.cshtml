@@ -6,15 +6,37 @@
 }
 
 <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
-    <div class="border-bottom border-dark border-1">
-        <h5 class="text-dark fw-bold m-0 p-3">@Model.Subject</h5>
-    </div>
-    <div class="flex-grow-1 ms-3">
-        @Model.Content
-    </div>
-    <div class="flex-grow-1 ms-3">
-        Authur @Model.User.UserName @Model.Timestamp<br/>
-        Tags
-        @string.Join(", ", Model.PostTags.Select(postTag => postTag.Tag.Name))
+    <div class="border-bottom border-dark border-1 p-3">
+        <div class="d-flex flex-row justify-content-between border-bottom border-light border-1 mb-2 p-2">
+            <h5 class="text-dark fw-bold m-0">@Model.Subject</h5>
+            <small class="text-dark m-0 align-middle">@Model.Timestamp</small>
+        </div>
+        <div class="d-flex flex-row">
+            <div class="d-flex flex-column w-100 justify-content-between">
+                <p class="p-3 m-0 text-dark">@Model.Content</p>
+            </div>
+        </div>
+        <div class="d-flex flex-row">
+            <div class="flex-grow-1 ms-3">
+                Authur: @Model.User.UserName
+                @{
+                    if (Model.PostTags.Any())
+                    {
+                        <br/>
+                        <span>Tags: </span>
+                        foreach (var postTag in Model.PostTags)
+                        {
+                            <a
+                                class="text-dark fw-bold m-0 p-3"
+                                asp-controller="Post"
+                                asp-action="Index"
+                                asp-route-tag="@postTag.Tag.Name">
+                                @postTag.Tag.Name
+                            </a>
+                        }
+                    }
+                }
+            </div>
+        </div>
     </div>
 </div>

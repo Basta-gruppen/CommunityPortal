@@ -18,23 +18,40 @@ namespace CommunityPortal.Controllers
             _context = applicationDbContext;
         }
         
-        public IActionResult Index()
+        public IActionResult Index(string status)
         {
             List<Forum> forums = _context.Forums.Include(f => f.SubForums).ToList();
 
             return View(forums);
         }
 
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            Forum forum = _context.Forums
+                .Include(f => f.SubForums)
+                .FirstOrDefault(f => f.Id == id);
+
+            if (forum == null)
+            {
+                return NotFound();
+            }
+
+            return View(forum);
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Forum newForum)
         {
-            //TODO: Check if forum with name already exists
+            if (_context.Forums.Any(f => f.Name == newForum.Name))
+                return BadRequest("Forum with that name already exists");
             
             newForum.Id = Guid.NewGuid().ToString();
 
             if (ModelState.IsValid)
             {
-                _context.Add(newForum);
+                _context.Forums.Add(newForum);
                 try
                 {
                     _context.SaveChanges();
@@ -47,10 +64,11 @@ namespace CommunityPortal.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            return BadRequest();
+            return BadRequest("Model state not valid");
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
         {
             Forum forum = _context.Forums.Find(id);

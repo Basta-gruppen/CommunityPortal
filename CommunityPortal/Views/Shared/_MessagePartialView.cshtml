@@ -1,0 +1,28 @@
+﻿@model IEnumerable<CommunityPortal.Models.Message>
+
+@foreach (var item in Model)
+{
+
+<div class="row">
+    @*<div class="col-md-3">
+        @item.Id
+    </div>*@
+    <div class="col-md-3">
+        @item.Content
+    </div>
+    <div class="col-md-3">
+        @item.UserId
+    </div>
+
+    <div class="col-md-3">
+        @item.ConversationId
+    </div>
+    <div class="col-md-3">
+        @item.TimeStamp
+    </div>
+
+
+
+
+</div>
+}

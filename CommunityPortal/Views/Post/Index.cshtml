@@ -1,27 +1,65 @@
-﻿@model IEnumerable<Post>
+﻿@using CommunityPortal.ViewModels
+@model List<Post>
 
 @{
     ViewBag.Title = "Post Index";
     Layout = "_Layout";
+    var createPostViewModel = new CreatePostViewModel();
 }
+
+@section Scripts
+{
+    @{
+        //TODO: Do not use forum.js in posts
+    }
+    <script src="~/js/Forum.js"></script>
+}
+
+<div class="d-flex flex-row justify-content-end mb-4">
+    <div id="CreateNewContainer" hidden>
+        <partial name="_CreatePostFormPartial" model="@createPostViewModel;"/>
+    </div>
+    <button class="btn btn-primary" onclick="ToggleCreateContainer()">New Post</button>
+</div>
 
 @{
     foreach (var post in Model)
     {
         <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
-            <div class="border-bottom border-dark border-1">
-                <h5 class="text-dark fw-bold m-0 p-3">@post.Subject</h5>
+            <div class="d-flex flex-row justify-content-between border-bottom border-dark border-1 mb-2 p-2">
+                <h5 class="text-dark fw-bold m-0">
+                    <a
+                        class="text-dark fw-bold m-0 p-3"
+                        asp-controller="Post"
+                        asp-action="View"
+                        asp-route-id="@post.Id">
+                        @post.Subject
+                    </a>
+                </h5>
+                <small class="text-dark m-0 align-middle">@post.Timestamp</small>
             </div>
-            <!--            <div class="flex-shrink-0">
-                <img src="..." alt="...">
-            </div>-->
             <div class="flex-grow-1 ms-3">
-                This is some content from a media component. You can replace this with any content and adjust it as needed.
+                @post.Content
             </div>
             <div class="flex-grow-1 ms-3">
-                Authur @post.User.UserName @post.Timestamp <br/>
-                Tags
-                @string.Join(", ", post.PostTags.Select(postTag => postTag.Tag.Name))
+                Authur: @post.User.UserName
+                @{
+                    if (post.PostTags.Any())
+                    {
+                        <br/>
+                        <span>Tags: </span>
+                        foreach (var postTag in post.PostTags)
+                        {
+                            <a
+                                class="text-dark fw-bold m-0 p-3"
+                                asp-controller="Post"
+                                asp-action="Index"
+                                asp-route-tag="@postTag.Tag.Name">
+                                @postTag.Tag.Name
+                            </a>
+                        }
+                    }
+                }
             </div>
         </div>
     }
