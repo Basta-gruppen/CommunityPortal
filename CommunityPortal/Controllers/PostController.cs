@@ -35,6 +35,7 @@ namespace CommunityPortal.Controllers
                     .Include(post => post.User)
                     .Include(post => post.PostTags)
                     .ThenInclude(postTag => postTag.Tag)
+                    .OrderByDescending(x => x.Timestamp)
                     .ToList());
         }
 
