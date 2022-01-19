@@ -102,7 +102,7 @@ namespace CommunityPortal.Controllers
                 Subject = createViewModel.Subject,
                 CategoryId = createViewModel.CategoryId,
                 Content = createViewModel.Content,
-                Timestamp = new DateTime(),
+                Timestamp = DateTime.Now,
             };
 
             _context.Posts.Add(newPost);
