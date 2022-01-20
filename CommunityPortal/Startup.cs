@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
+using CommunityPortal.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +34,7 @@ namespace CommunityPortal
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                 //options.UseMySql(Configuration.GetConnectionString("EkramConnection"));
             });
+            services.AddScoped<PostRepository, PostRepository>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
