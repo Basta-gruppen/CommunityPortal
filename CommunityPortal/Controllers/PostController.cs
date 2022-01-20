@@ -16,11 +16,13 @@ namespace CommunityPortal.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
+        private readonly PostRepository _postRepository;
+        
+        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, PostRepository postRepository)
         {
             _context = applicationDbContext;
             _userManager = userManager;
+            _postRepository = postRepository;
         }
 
         [HttpGet]
@@ -29,15 +31,7 @@ namespace CommunityPortal.Controllers
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
-            return View(
-                _context
-                    .Posts
-                    .Include(post => post.Category)
-                    .Include(post => post.User)
-                    .Include(post => post.PostTags)
-                    .ThenInclude(postTag => postTag.Tag)
-                    .OrderByDescending(x => x.Timestamp)
-                    .ToList());
+            return View(_postRepository.GetAll().ToList());
         }
 
         [HttpGet]
@@ -46,27 +40,14 @@ namespace CommunityPortal.Controllers
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
-            return View(
-                _context
-                    .Posts
-                    .Include(post => post.Category)
-                    .Include(post => post.User)
-                    .Include(post => post.PostTags)
-                    .ThenInclude(postTag => postTag.Tag)
-                    .Where(post => post.PostTags.Any(postTag => postTag.Tag.Name.Equals(tag)))
-                    .ToList());
+            return View(_postRepository.GetAllByTag(tag).ToList());
         }
 
         [HttpGet]
         [Route("/Post/{id}")]
         public new IActionResult View(string id)
         {
-            var post = _context.Posts
-                .Include(post => post.Category)
-                .Include(post => post.User)
-                .Include(post => post.PostTags)
-                .ThenInclude(postTag => postTag.Tag)
-                .FirstOrDefault(post => post.Id == id);
+            var post = _postRepository.GetById(id);
             if (post == null) return NotFound();
             return View(post);
         }
@@ -81,7 +62,7 @@ namespace CommunityPortal.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreatePostViewModel createViewModel)
         {
-            var newPost = new Post
+            var post = new Post
             {
                 Id = Guid.NewGuid().ToString(),
                 UserId = _userManager.GetUserId(User),
@@ -91,34 +72,11 @@ namespace CommunityPortal.Controllers
                 Timestamp = DateTime.Now
             };
 
-            _context.Posts.Add(newPost);
+            _context.Posts.Add(post);
             _context.SaveChanges();
             
-
-            foreach (var selectedTagId in createViewModel.SelectedTagIds)
-            {
-                var tagId = selectedTagId;
-                if (!Guid.TryParse(tagId, out _))
-                {
-                    var tag = new Tag
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Name = selectedTagId
-                    };
-                    _context.Tags.Add(tag);
-                    _context.SaveChanges();
-                    tagId = tag.Id;
-                }
-
-                _context.PostTags.Add(new PostTag
-                {
-                    PostId = newPost.Id,
-                    TagId = tagId
-                });
-
-                _context.SaveChanges();
-            }
-
+            _postRepository.AddTags(post, createViewModel);
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -126,46 +84,9 @@ namespace CommunityPortal.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(CreatePostViewModel createViewModel)
         {
-            var post = _context.Posts.First(post => post.Id == createViewModel.Id);
-
-            _context.PostTags
-                .RemoveRange(_context.PostTags
-                    .Where(postTag => postTag.PostId.Equals(createViewModel.Id))
-                );
-            _context.SaveChanges();
-
-
-            post.CategoryId = createViewModel.CategoryId;
-            post.Content = createViewModel.Content;
-            post.Subject = createViewModel.Subject;
-            post.Timestamp = DateTime.Now;
-
-            _context.SaveChanges();
+            _postRepository
+                .Update(createViewModel);
             
-            foreach (var selectedTagId in createViewModel.SelectedTagIds)
-            {
-                var tagId = selectedTagId;
-                if (!Guid.TryParse(selectedTagId, out _))
-                {
-                    var tag = new Tag
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Name = selectedTagId
-                    };
-                    _context.Tags.Add(tag);
-                    _context.SaveChanges();
-                    tagId = tag.Id;
-                }
-
-                _context.PostTags.Add(new PostTag
-                {
-                    PostId = post.Id,
-                    TagId = tagId
-                });
-
-                _context.SaveChanges();
-            }
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -174,43 +95,20 @@ namespace CommunityPortal.Controllers
         {
             var createPostViewModel = new CreatePostViewModel();
             ViewBag.Categories = _context.Categories.ToList();
-            var post = _context.Posts
-                .Include(post => post.Category)
-                .Include(post => post.User)
-                .Include(post => post.PostTags)
-                .ThenInclude(postTag => postTag.Tag)
-                .FirstOrDefault(post => post.Id == id);
-
+            var post = _postRepository.GetById(id);
             if (post == null) return View(createPostViewModel);
-            createPostViewModel = new CreatePostViewModel
-            {
-                Id = post.Id,
-                UserId = _userManager.GetUserId(User),
-                Subject = post.Subject,
-                CategoryId = post.CategoryId,
-                Content = post.Content,
-                SelectedTagIds = post.PostTags.Select(x => x.TagId).ToArray(),
-            };
-            createPostViewModel.TagList
-                .AddRange(
-                    post.PostTags.Select(
-                        x => new SelectListItem(x.Tag.Name, x.Tag.Id)
-                    )
-                );
 
-            return View(createPostViewModel);
+            return View(_postRepository
+                .CreateViewModel(post, _userManager.GetUserId(User)));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
         {
-            var post = _context.Posts.Find(id);
-            _context.Posts.Remove(post);
-
             try
             {
-                _context.SaveChanges();
+                _postRepository.Delete(id);
             }
             catch (DbUpdateException e)
             {
