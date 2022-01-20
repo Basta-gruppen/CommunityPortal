@@ -20,10 +20,11 @@ namespace CommunityPortal.ViewModels
         [Required] public string Content { get; set; }
 
         [Required]
-        //public string Tags { get; set; }
         public List<Tag> Tags { get; set; }
 
         public string[] SelectedTagIds { get; set; } = { };
-        public List<SelectListItem> TagList { get; set; } = new List<SelectListItem>();
+
+        public List<SelectListItem> TagList { get; set; } =
+            new List<SelectListItem> {new SelectListItem("Tag", "", false)};
     }
 }
