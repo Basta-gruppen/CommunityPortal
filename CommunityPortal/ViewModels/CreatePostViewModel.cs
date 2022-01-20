@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using CommunityPortal.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CommunityPortal.ViewModels
 {
@@ -23,7 +24,10 @@ namespace CommunityPortal.ViewModels
         public string Content { get; set; }
         
         [Required]
-        public string Tags { get; set; }
-        //public List<string> Tags { get; set; }
+        //public string Tags { get; set; }
+        public List<Tag> Tags { get; set; }
+
+        public string[] SelectedTagIds { get; set; } = { };
+        public List<SelectListItem> TagList { get; set; } = new List<SelectListItem>();
     }
 }
