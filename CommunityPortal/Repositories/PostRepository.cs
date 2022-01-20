@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
+using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -45,26 +46,6 @@ namespace CommunityPortal.Repositories
                 .Include(post => post.PostTags)
                 .ThenInclude(postTag => postTag.Tag)
                 .FirstOrDefault(post => post.Id == id);
-        }
-        
-        public CreatePostViewModel CreateViewModel(Post post, string userId)
-        {
-            var createPostViewModel = new CreatePostViewModel
-            {
-                Id = post.Id,
-                UserId = userId,
-                Subject = post.Subject,
-                CategoryId = post.CategoryId,
-                Content = post.Content,
-                SelectedTagIds = post.PostTags.Select(x => x.TagId).ToArray(),
-            };
-            createPostViewModel.TagList
-                .AddRange(
-                    post.PostTags.Select(
-                        x => new SelectListItem(x.Tag.Name, x.Tag.Id)
-                    )
-                );
-            return createPostViewModel;
         }
 
         public void AddTag(Post post, Tag tag)
@@ -115,6 +96,18 @@ namespace CommunityPortal.Repositories
             _context.SaveChanges();
         }
 
+        public PostRepository Create(CreatePostViewModel createViewModel)
+        {
+            var post = PostFactory.Create(createViewModel);
+
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+            
+            AddTags(post, createViewModel);
+
+            return this;
+        }
+        
         public PostRepository Update(Post post, CreatePostViewModel createViewModel)
         {
             RemoveTags(post);

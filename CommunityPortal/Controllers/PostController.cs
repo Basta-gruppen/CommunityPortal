@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
+using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.Repositories;
 using CommunityPortal.ViewModels;
@@ -62,21 +63,8 @@ namespace CommunityPortal.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreatePostViewModel createViewModel)
         {
-            var post = new Post
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserId = _userManager.GetUserId(User),
-                Subject = createViewModel.Subject,
-                CategoryId = createViewModel.CategoryId,
-                Content = createViewModel.Content,
-                Timestamp = DateTime.Now
-            };
-
-            _context.Posts.Add(post);
-            _context.SaveChanges();
-            
-            _postRepository.AddTags(post, createViewModel);
-            
+            createViewModel.UserId = _userManager.GetUserId(User);
+            _postRepository.Create(createViewModel);
             return RedirectToAction(nameof(Index));
         }
 
@@ -98,7 +86,7 @@ namespace CommunityPortal.Controllers
             var post = _postRepository.GetById(id);
             if (post == null) return View(createPostViewModel);
 
-            return View(_postRepository
+            return View(PostFactory
                 .CreateViewModel(post, _userManager.GetUserId(User)));
         }
 
