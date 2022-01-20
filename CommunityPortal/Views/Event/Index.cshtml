@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Event>
+@{
+    ViewData["Title"] = "Event Index";
+    Layout = "_Layout";
+}
+
+@{
+    foreach (var ev in Model)
+    {
+    <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
+        <div class="border-bottom border-dark border-1">
+            <h5 class="text-dark fw-bold m-0 p-3">@ev.Subject</h5>
+        </div>
+        <div class="flex-grow-1 ms-3">
+            @ev.Content
+        </div>
+        <div class="flex-grow-1 ms-3">
+            Event Date :- @ev.StartDate
+        </div>
+        <div class="flex-grow-1 ms-3">
+            @* @ev.User.UserName; Select @ev.User.UserName Where(ev =>  ev.User.Id ==ev.UserId).FirstOrDefault();*@
+            @ev.Timestamp
+        </div>
+        @Html.ActionLink("Edit", "EditEvent", new { eventId = ev.Id })<br />
+        @Html.ActionLink("Delete", "DeleteEvent", new { eventId = ev.Id})
+    </div>
+    }
+}
