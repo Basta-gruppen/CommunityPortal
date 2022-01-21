@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
+using CommunityPortal.Repositories;
 using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
@@ -13,11 +16,13 @@ namespace CommunityPortal.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
+        private readonly PostRepository _postRepository;
+        
+        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, PostRepository postRepository)
         {
             _context = applicationDbContext;
             _userManager = userManager;
+            _postRepository = postRepository;
         }
 
         [HttpGet]
@@ -26,14 +31,7 @@ namespace CommunityPortal.Controllers
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
-            return View(
-                _context
-                    .Posts
-                    .Include(post => post.Category)
-                    .Include(post => post.User)
-                    .Include(post => post.PostTags)
-                    .ThenInclude(postTag => postTag.Tag)
-                    .ToList());
+            return View(_postRepository.GetAll().ToList());
         }
 
         [HttpGet]
@@ -42,69 +40,75 @@ namespace CommunityPortal.Controllers
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
-            return View(
-                _context
-                    .Posts
-                    .Include(post => post.Category)
-                    .Include(post => post.User)
-                    .Include(post => post.PostTags)
-                    .ThenInclude(postTag => postTag.Tag)
-                    .Where(post => post.PostTags.Any(postTag => postTag.Tag.Name.Equals(tag)))
-                    .ToList());
+            return View(_postRepository.GetAllByTag(tag).ToList());
         }
 
         [HttpGet]
         [Route("/Post/{id}")]
         public new IActionResult View(string id)
         {
-            var post = _context.Posts
-                .Include(post => post.Category)
-                .Include(post => post.User)
-                .Include(post => post.PostTags)
-                .ThenInclude(postTag => postTag.Tag)
-                .FirstOrDefault(post => post.Id == id);
+            var post = _postRepository.GetById(id);
             if (post == null) return NotFound();
             return View(post);
         }
 
+        public IActionResult Create()
+        {
+            ViewBag.Categories = _context.Categories.ToList();
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //TODO: Add functionality to Add tags
         public IActionResult Create(CreatePostViewModel createViewModel)
         {
-            var newPost = new Post
+            var post = new Post
             {
                 Id = Guid.NewGuid().ToString(),
                 UserId = _userManager.GetUserId(User),
                 Subject = createViewModel.Subject,
                 CategoryId = createViewModel.CategoryId,
                 Content = createViewModel.Content,
-                Timestamp = new DateTime()
+                Timestamp = DateTime.Now
             };
 
-            _context.Posts.Add(newPost);
+            _context.Posts.Add(post);
             _context.SaveChanges();
-
-            foreach (var tagId in createViewModel.Tags)
-                _context.PostTags.Add(new PostTag
-                {
-                    PostId = newPost.Id,
-                    TagId = tagId
-                });
-            _context.SaveChanges();
+            
+            _postRepository.AddTags(post, createViewModel);
+            
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(CreatePostViewModel createViewModel)
+        {
+            _postRepository
+                .Update(createViewModel);
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var createPostViewModel = new CreatePostViewModel();
+            ViewBag.Categories = _context.Categories.ToList();
+            var post = _postRepository.GetById(id);
+            if (post == null) return View(createPostViewModel);
+
+            return View(_postRepository
+                .CreateViewModel(post, _userManager.GetUserId(User)));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
         {
-            var post = _context.Posts.Find(id);
-            _context.Posts.Remove(post);
-
             try
             {
-                _context.SaveChanges();
+                _postRepository.Delete(id);
             }
             catch (DbUpdateException e)
             {

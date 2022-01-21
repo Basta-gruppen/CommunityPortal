@@ -1,0 +1,8 @@
+﻿@model CreatePostViewModel
+
+<h2>Create post</h2>
+@{
+    var createPersonViewModel = new CreatePostViewModel();
+}
+
+<partial name="_PostFormPartial" model="@createPersonViewModel;"/>
