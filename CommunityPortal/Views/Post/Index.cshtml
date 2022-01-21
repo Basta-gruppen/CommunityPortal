@@ -23,18 +23,26 @@
         {
             <div class="card mb-4">
                 <div class="card-header">
-                    <div class="small text-muted">
-                        Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
-                        in
-                        <a
-                            class="text-decoration-none"
-                            asp-controller="Post"
-                            asp-action="Category"
-                            asp-route-category="@post.Category.Name">
-                            @post.Category.Name
-                        </a>
-                    </div>
-                </div>
+                    <ul class="nav nav-tabs card-header-tabs">
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="true">Post</a>
+                      </li>
+                      <li class="nav-item">
+                          <a 
+                              class="nav-link" 
+                              asp-controller="Post"
+                              asp-action="Edit"
+                              asp-route-id="@post.Id">Edit</a>
+                      </li>
+                        <li class="nav-item">
+                            <form method="Post" action="@Url.Action("Delete", "Post")">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" value="@post.Id" name="ID"/>
+                                <button class="nav-link link-danger" type="submit">Remove</button>
+                            </form>
+                        </li>
+                    </ul>
+                  </div>
                 <div class="card-body">
                     @foreach (var postTag in post.PostTags)
                     {
@@ -54,29 +62,6 @@
                        asp-route-id="@post.Id">
                         Read more →
                     </a>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Administrate
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    asp-controller="Post"
-                                    asp-action="Edit"
-                                    asp-route-id="@post.Id">
-                                    Edit
-                                </a>
-                            </li>
-                            <li>
-                                <form method="Post" action="@Url.Action("Delete", "Post")">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" value="@post.Id" name="ID"/>
-                                    <button class="dropdown-item" type="submit">Remove</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
                   <div class="card-footer small text-muted">
                         Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
