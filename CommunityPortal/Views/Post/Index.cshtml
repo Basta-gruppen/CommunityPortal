@@ -10,15 +10,15 @@
 
 }
 
+<a
+    class="btn btn-primary mb-4"
+    asp-controller="Post"
+    asp-action="Create">
+    New Post
+</a>
 <div class="row">
     <!-- Blog entries-->
     <div class="col-lg-8">
-        <a
-            class="btn btn-primary mb-4"
-            asp-controller="Post"
-            asp-action="Create">
-            New Post
-        </a>
         @foreach (var post in Model)
         {
             <div class="card mb-4">
@@ -100,4 +100,3 @@
     </div>
     <partial name="_PostSideBarPartial"/>
 </div>
-
