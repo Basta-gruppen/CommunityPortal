@@ -26,6 +26,15 @@ namespace CommunityPortal.Controllers
         {
             List<Event> ListOfPeople = _context.Events.OrderByDescending(e => e.Timestamp).ToList();
             return View(ListOfPeople);
+            //return View(
+            //    _context
+            //        .Events
+            //        .Include(ev => ev.Subject)
+            //        .Include(ev => ev.Content)
+            //        .Include(ev => ev.StartDate)
+            //        .Include(ev => ev.User)
+            //        .Include(ev => ev.Timestamp)
+            //        .ToList());
         }
         public IActionResult CreateEvent()
         {
