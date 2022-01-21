@@ -1,49 +1,71 @@
-@using Microsoft.AspNetCore.Mvc.Rendering
-@model CommunityPortal.ViewModels.CreatePostViewModel
+@model CreatePostViewModel
 @{
     var actionName = string.IsNullOrEmpty(Model.Id) ? "Create" : "Update";
 }
-@using (var form = Html.BeginForm( actionName, "Post", FormMethod.Post))
-{
-    @Html.HiddenFor(x => x.Id)
-    <div class="row mb-3 g-3">
-        <div class="col-md-4">
-            @Html.LabelFor(model => model.TagList,
-                htmlAttributes: new
-                {
-                    @class="form-label"
-                })
-            @Html.ListBoxFor(x => x.SelectedTagIds,
-                Model.TagList,
-                htmlAttributes: new
-                {
-                    @class = "form-control", 
-                    @data_allow_clear = "true", 
-                    @data_suggestions_threshold = "0",
-                    @data_allow_new="true",
-                    @data_server="/Tag/Get",
-                    @data_live_server="1"
-                })
-            <div class="invalid-feedback">Please select a valid tag.</div>
-        </div>
+<div class="card">
+    <div class="card-header">
+        @actionName post as @User.Identity.Name
     </div>
-
-    @Html.LabelFor(model => model.Subject)
-    @Html.TextBoxFor(model => model.Subject, new {@class = "form-control"})
-
-    @Html.LabelFor(model => model.CategoryId)
-    @Html.DropDownListFor(model => model.CategoryId,
-        new SelectList(ViewBag.Categories, "Id", "Name"),
-        new {@class = "form-control"})
-    @Html.LabelFor(model => model.Content)
-    <div class="input-group">
-        @Html.TextAreaFor(model => model.Content, new {@class = "form-control"})
+    <div class="card-body">
+        @using (var form = Html.BeginForm(actionName, "Post", FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.Id)
+            <div class="mb-3 row">
+                <label asp-for="CategoryId" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CategoryId,
+                        new SelectList(ViewBag.Categories, "Id", "Name"),
+                        new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="TagList" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.ListBoxFor(x => x.SelectedTagIds,
+                        Model.TagList,
+                        new
+                        {
+                            @class = "form-control",
+                            data_allow_clear = "true",
+                            data_suggestions_threshold = "0",
+                            data_allow_new = "true",
+                            data_server = "/Tag/Get",
+                            data_live_server = "1"
+                        })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Subject" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="Subject" class="form-control"/>
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="staticAuthor" class="col-sm-2 col-form-label">Authur</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="staticAuthor" value="@User.Identity.Name">
+                </div>
+            </div>
+            <!-- Message input -->
+            <div class="mb-3 row">
+                <label asp-for="Content" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.Content, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2 col-form-label"></div>
+                <div class="col-sm-10">
+            <button type="submit" class="btn btn-sm btn-primary btn-block mb-3">Submit</button>
+            @Html.ValidationSummary()
+                </div>
+            </div>
+        }
     </div>
-    <button type="submit" class="btn btn-success">add</button>
-    @Html.ValidationSummary()
-}
+</div>
 
 <script type="module">
     import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
-    Tags.init("select");
+    Tags.init("#SelectedTagIds");
 </script>
