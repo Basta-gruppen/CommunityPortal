@@ -48,6 +48,7 @@ namespace CommunityPortal.Controllers
         [Route("/Post/{id}")]
         public new IActionResult View(string id)
         {
+            ViewBag.Categories = _context.Categories.ToList();
             var post = _postRepository.GetById(id);
             if (post == null) return NotFound();
             return View(post);
