@@ -41,7 +41,19 @@ namespace CommunityPortal.Controllers
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _context.Categories.ToList();
-            return View(_postRepository.GetAllByTag(tag).ToList());
+            return View(_postRepository.GetAll().ByTag(tag).ToList());
+        }
+        
+        [HttpGet]
+        [Route("/Posts/category/{category}")]
+        public IActionResult Category(string category)
+        {
+            ViewBag.Tags = _context.Tags.ToList();
+            ViewBag.Categories = _context.Categories.ToList();
+            return View(
+                viewName: "Index", 
+                model:_postRepository.GetAll().ByCategoryName(category).ToList()
+                );
         }
 
         [HttpGet]

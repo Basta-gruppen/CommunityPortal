@@ -6,6 +6,7 @@ using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Repositories
@@ -13,28 +14,38 @@ namespace CommunityPortal.Repositories
     public class PostRepository
     {
         private readonly ApplicationDbContext _context;
+        private IEnumerable<Post> _posts;
 
         public PostRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Post> GetAll()
+        public PostRepository GetAll()
         {
-            return _context
+           _posts = _context
                 .Posts
                 .Include(post => post.Category)
                 .Include(post => post.User)
                 .Include(post => post.PostTags)
                 .ThenInclude(postTag => postTag.Tag)
                 .OrderByDescending(x => x.Timestamp);
+           return this;
         }
 
-        public IEnumerable<Post> GetAllByTag(string tag)
+        public IEnumerable<Post> ByTag(string tag)
         {
-            return GetAll()
+            return _posts
                 .Where(
                     post => post.PostTags.Any(postTag => postTag.Tag.Name.Equals(tag))
+                );
+        }
+        
+        public IEnumerable<Post> ByCategoryName(string category)
+        {
+            return _posts
+            .Where(
+                    post => post.Category.Name.Equals(category)
                 );
         }
 
@@ -142,6 +153,11 @@ namespace CommunityPortal.Repositories
         {
             var post = _context.Posts.Find(id);
             return Delete(post);
+        }
+
+        public List<Post> ToList()
+        {
+            return _posts.ToList();
         }
     }
 }
