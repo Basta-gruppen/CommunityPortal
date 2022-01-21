@@ -22,10 +22,20 @@
         @foreach (var post in Model)
         {
             <div class="card mb-4">
-                <div class="card-body">
+                <div class="card-header">
                     <div class="small text-muted">
-                        Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User.UserName
+                        Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
+                        in
+                        <a
+                            class="text-decoration-none"
+                            asp-controller="Post"
+                            asp-action="Category"
+                            asp-route-id="@post.Category.Name">
+                            @post.Category.Name
+                        </a>
                     </div>
+                </div>
+                <div class="card-body">
                     @foreach (var postTag in post.PostTags)
                     {
                         <a
@@ -38,14 +48,14 @@
                     }
                     <h2 class="card-title">@post.Subject</h2>
                     <p class="card-text">@post.Content</p>
-                    <a class="btn btn-primary"
+                    <a class="btn btn-primary btn-sm"
                        asp-controller="Post"
                        asp-action="View"
                        asp-route-id="@post.Id">
                         Read more →
                     </a>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Administrate
                         </button>
                         <ul class="dropdown-menu">
@@ -68,6 +78,17 @@
                         </ul>
                     </div>
                 </div>
+                  <div class="card-footer small text-muted">
+                        Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
+                        in
+                        <a
+                            class="text-decoration-none"
+                            asp-controller="Post"
+                            asp-action="Category"
+                            asp-route-id="@post.Category.Name">
+                            @post.Category.Name
+                        </a>
+                  </div>
             </div>
         }
         <!-- Pagination-->
