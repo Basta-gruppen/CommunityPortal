@@ -8,6 +8,7 @@ namespace CommunityPortal.ViewModels
 {
     public class EventViewModel
     {
+
         [Key]
         public string Id { get; set; }
         [Required]
