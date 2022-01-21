@@ -24,16 +24,16 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
-                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="true">Post</a>
-                      </li>
-                      <li class="nav-item">
-                          <a 
-                              class="nav-link" 
-                              asp-controller="Post"
-                              asp-action="Edit"
-                              asp-route-id="@post.Id">Edit</a>
-                      </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="true">Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link link-dark" 
+                                asp-controller="Post"
+                                asp-action="Edit"
+                                asp-route-id="@post.Id">Edit</a>
+                        </li>
                         <li class="nav-item">
                             <form method="Post" action="@Url.Action("Delete", "Post")">
                                 @Html.AntiForgeryToken()
@@ -42,7 +42,7 @@
                             </form>
                         </li>
                     </ul>
-                  </div>
+                </div>
                 <div class="card-body">
                     @foreach (var postTag in post.PostTags)
                     {
@@ -54,7 +54,7 @@
                             @postTag.Tag.Name
                         </a>
                     }
-                    <h2 class="card-title">@post.Subject</h2>
+                    <h5 class="card-title">@post.Subject</h5>
                     <p class="card-text">@post.Content</p>
                     <a class="btn btn-primary btn-sm"
                        asp-controller="Post"
