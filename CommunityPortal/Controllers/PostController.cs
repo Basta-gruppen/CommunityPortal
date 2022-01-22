@@ -7,6 +7,7 @@ using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace CommunityPortal.Controllers
 {
@@ -26,47 +27,66 @@ namespace CommunityPortal.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        private IActionResult ListPosts()
+        protected IPagedList<Post> GetPagedPosts(int? page)
+        {
+            // return a 404 if user browses to before the first page
+            if (page < 1)
+                return null;
+
+            // retrieve list from database/whereverand
+            var listUnpaged = _postRepository.ToList();
+
+            // page the list
+            const int pageSize = 1;
+            var listPaged = listUnpaged.ToPagedList(page ?? 1, pageSize);
+
+            // return a 404 if user browses to pages beyond last page. special case first page if no items exist
+            if (listPaged.PageNumber != 1 && page.HasValue && page > listPaged.PageCount)
+                return null;
+
+            return listPaged;
+        }
+        
+        private IActionResult ListPosts(int page)
         {
             ViewBag.Tags = _context.Tags.ToList();
             ViewBag.Categories = _categoryRepository
                 .GetAllAsViewModelList(_userManager.GetUserId(User))
                 .ToList();
-
             return View(
                 "Index",
-                _postRepository.ToList()
+                GetPagedPosts(page)
             );
         }
 
         [HttpGet]
-        [Route("/Posts/")]
-        public IActionResult Index()
+        [Route("/Posts/{page:int?}")]
+        public IActionResult Index(int page = 1)
         {
             _postRepository
                 .GetAll()
                 .ByUserSubscribedCategory(_userManager.GetUserId(User));
-            return ListPosts();
+            return ListPosts(page);
         }
 
         [HttpGet]
-        [Route("/Posts/tag/{Tag}")]
-        public IActionResult Index(string tag)
+        [Route("/Posts/tag/{Tag}/{page:int?}")]
+        public IActionResult Index(string tag, int page = 1)
         {
             _postRepository
                 .GetAll()
                 .ByTag(tag);
-            return ListPosts();
+            return ListPosts(page);
         }
 
         [HttpGet]
-        [Route("/Posts/category/{category}")]
-        public IActionResult Category(string category)
+        [Route("/Posts/category/{category}/{page:int?}")]
+        public IActionResult Category(string category, int page = 1)
         {
             _postRepository
                 .GetAll()
                 .ByCategoryName(category);
-            return ListPosts();
+            return ListPosts(page);
         }
 
         [HttpGet]

@@ -1,9 +1,13 @@
-﻿@model List<Post>
+﻿@model IEnumerable<Post>
 
 @{
     ViewBag.Title = "Post Index";
     Layout = "_Layout";
 }
+
+@using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
+@using X.PagedList; 
+@using X.PagedList.Web.Common
 
 @section Scripts
 {
@@ -76,33 +80,15 @@
                   </div>
             </div>
         }
-        <!-- Pagination-->
-        <nav aria-label="Pagination">
-            <hr class="my-0"/>
-            <ul class="pagination justify-content-center my-4">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a>
-                </li>
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#!">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#!">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#!">3</a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="#!">...</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#!">15</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#!">Older</a>
-                </li>
-            </ul>
-        </nav>
+
+        <!-- Pagination-->        
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action(null, new { page }), new PagedListRenderOptions
+        {
+            PageClasses = new string[] { "page-link" },
+            UlElementClasses = new string[] { "pagination justify-content-center my-4" },
+            LiElementClasses = new string[] { "page-item" },
+            DisplayItemSliceAndTotal = true,
+        })
     </div>
     <partial name="_PostSideBarPartial"/>
 </div>
