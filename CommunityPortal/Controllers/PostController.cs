@@ -26,6 +26,7 @@ namespace CommunityPortal.Controllers
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
         }
+
         protected IPagedList<Post> GetPagedPosts(int? page)
         {
             // return a 404 if user browses to before the first page
@@ -45,7 +46,7 @@ namespace CommunityPortal.Controllers
 
             return listPaged;
         }
-        
+
         private IActionResult ListPosts(int page)
         {
             ViewBag.Tags = _context.Tags.ToList();
@@ -92,7 +93,9 @@ namespace CommunityPortal.Controllers
         [Route("/Post/{id}")]
         public new IActionResult View(string id)
         {
-            ViewBag.Categories = _context.Categories.ToList();
+            ViewBag.Categories = ViewBag.Categories = _categoryRepository
+                .GetAllAsViewModelList(_userManager.GetUserId(User))
+                .ToList();
             var post = _postRepository.GetById(id);
             if (post == null) return NotFound();
             return View(post);
