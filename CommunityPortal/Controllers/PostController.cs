@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Factories;
 using CommunityPortal.Models;
@@ -8,52 +6,67 @@ using CommunityPortal.Repositories;
 using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
     public class PostController : Controller
     {
+        private readonly CategoryRepository _categoryRepository;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly PostRepository _postRepository;
-        
-        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, PostRepository postRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public PostController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager,
+            PostRepository postRepository, CategoryRepository categoryRepository)
         {
             _context = applicationDbContext;
             _userManager = userManager;
             _postRepository = postRepository;
+            _categoryRepository = categoryRepository;
+        }
+
+        private IActionResult ListPosts()
+        {
+            ViewBag.Tags = _context.Tags.ToList();
+            ViewBag.Categories = _categoryRepository
+                .GetAllAsViewModelList(_userManager.GetUserId(User))
+                .ToList();
+
+            return View(
+                "Index",
+                _postRepository.ToList()
+            );
         }
 
         [HttpGet]
         [Route("/Posts/")]
         public IActionResult Index()
         {
-            ViewBag.Tags = _context.Tags.ToList();
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(_postRepository.GetAll().ToList());
+            _postRepository
+                .GetAll()
+                .ByUserSubscribedCategory(_userManager.GetUserId(User));
+            return ListPosts();
         }
 
         [HttpGet]
         [Route("/Posts/tag/{Tag}")]
         public IActionResult Index(string tag)
         {
-            ViewBag.Tags = _context.Tags.ToList();
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(_postRepository.GetAll().ByTag(tag).ToList());
+            _postRepository
+                .GetAll()
+                .ByTag(tag);
+            return ListPosts();
         }
-        
+
         [HttpGet]
         [Route("/Posts/category/{category}")]
         public IActionResult Category(string category)
         {
-            ViewBag.Tags = _context.Tags.ToList();
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(
-                viewName: "Index", 
-                model:_postRepository.GetAll().ByCategoryName(category).ToList()
-                );
+            _postRepository
+                .GetAll()
+                .ByCategoryName(category);
+            return ListPosts();
         }
 
         [HttpGet]
@@ -87,7 +100,7 @@ namespace CommunityPortal.Controllers
         {
             _postRepository
                 .Update(createViewModel);
-            
+
             return RedirectToAction(nameof(Index));
         }
 

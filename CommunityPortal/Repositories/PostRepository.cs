@@ -5,8 +5,6 @@ using CommunityPortal.Data;
 using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Repositories
@@ -14,7 +12,7 @@ namespace CommunityPortal.Repositories
     public class PostRepository
     {
         private readonly ApplicationDbContext _context;
-        private IEnumerable<Post> _posts;
+        private IQueryable<Post> _posts;
 
         public PostRepository(ApplicationDbContext context)
         {
@@ -23,30 +21,49 @@ namespace CommunityPortal.Repositories
 
         public PostRepository GetAll()
         {
-           _posts = _context
+            _posts = _context
                 .Posts
                 .Include(post => post.Category)
                 .Include(post => post.User)
                 .Include(post => post.PostTags)
                 .ThenInclude(postTag => postTag.Tag)
                 .OrderByDescending(x => x.Timestamp);
-           return this;
+
+            return this;
         }
 
-        public IEnumerable<Post> ByTag(string tag)
+        public PostRepository ByTag(string tag)
         {
-            return _posts
+            _posts = _posts
                 .Where(
                     post => post.PostTags.Any(postTag => postTag.Tag.Name.Equals(tag))
                 );
+
+            return this;
         }
-        
-        public IEnumerable<Post> ByCategoryName(string category)
+
+        public PostRepository ByCategoryName(string category)
         {
-            return _posts
-            .Where(
+            _posts = _posts
+                .Where(
                     post => post.Category.Name.Equals(category)
                 );
+            return this;
+        }
+
+        public PostRepository ByUserSubscribedCategory(string userId)
+        {
+            _posts = _posts
+                .Join(_context.CategorySubscribers,
+                    post => post.CategoryId,
+                    categorySubscriber => categorySubscriber.CategoryId,
+                    (post, categorySubscriber) => new
+                    {
+                        Post = post, categorySubscriber.UserId
+                    }
+                ).Where(x => x.UserId.Equals(userId)).Select(p => p.Post);
+
+            return this;
         }
 
         public Post GetById(string id)
@@ -80,12 +97,9 @@ namespace CommunityPortal.Repositories
 
         public void AddTags(Post post, IEnumerable<Tag> tags)
         {
-            foreach (var tag in tags)
-            {
-                AddTag(post, tag);
-            }
+            foreach (var tag in tags) AddTag(post, tag);
         }
-        
+
         public PostRepository AddTags(Post post, CreatePostViewModel createPostViewModel)
         {
             AddTags(
@@ -97,7 +111,7 @@ namespace CommunityPortal.Repositories
             );
             return this;
         }
-        
+
         public void RemoveTags(Post post)
         {
             _context.PostTags
@@ -113,12 +127,12 @@ namespace CommunityPortal.Repositories
 
             _context.Posts.Add(post);
             _context.SaveChanges();
-            
+
             AddTags(post, createViewModel);
 
             return this;
         }
-        
+
         public PostRepository Update(Post post, CreatePostViewModel createViewModel)
         {
             RemoveTags(post);
@@ -134,13 +148,13 @@ namespace CommunityPortal.Repositories
 
             return this;
         }
-        
+
         public PostRepository Update(CreatePostViewModel createViewModel)
         {
-            return Update(post: GetById(createViewModel.Id), createViewModel);
+            return Update(GetById(createViewModel.Id), createViewModel);
         }
 
-        
+
         public PostRepository Delete(Post post)
         {
             RemoveTags(post);
@@ -148,7 +162,7 @@ namespace CommunityPortal.Repositories
             _context.SaveChanges();
             return this;
         }
-        
+
         public PostRepository Delete(string id)
         {
             var post = _context.Posts.Find(id);

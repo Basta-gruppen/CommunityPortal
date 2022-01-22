@@ -35,6 +35,7 @@ namespace CommunityPortal
                 //options.UseMySql(Configuration.GetConnectionString("EkramConnection"));
             });
             services.AddScoped<PostRepository, PostRepository>();
+            services.AddScoped<CategoryRepository, CategoryRepository>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
