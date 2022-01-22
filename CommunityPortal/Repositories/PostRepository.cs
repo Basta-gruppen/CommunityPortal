@@ -132,7 +132,7 @@ namespace CommunityPortal.Repositories
 
         public PostRepository Create(CreatePostViewModel createViewModel)
         {
-            var post = PostFactory.Create(createViewModel);
+            var post = PostFactory.Model(createViewModel);
 
             _context.Posts.Add(post);
             _context.SaveChanges();

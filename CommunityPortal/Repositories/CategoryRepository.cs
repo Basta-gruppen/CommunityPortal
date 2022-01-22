@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
+using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
 
@@ -9,11 +10,17 @@ namespace CommunityPortal.Repositories
     public class CategoryRepository
     {
         private readonly ApplicationDbContext _context;
-        private IEnumerable<CategoryViewModel> _categoryViewModels;
+        private IQueryable<CategoryViewModel> _categoryViewModels;
 
         public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+        
+        public Category GetById(string id)
+        {
+            return _context.Categories
+                .FirstOrDefault(category => category.Id == id);
         }
 
         public CategoryRepository GetAllAsViewModelList(string userId)
@@ -36,12 +43,27 @@ namespace CommunityPortal.Repositories
 
             return this;
         }
-
-        public List<CategoryViewModel> ToList()
+        
+        public CategoryRepository Create(CreateCategoryViewModel createViewModel)
         {
-            return _categoryViewModels.ToList();
+            var category = CategoryFactory.Model(createViewModel);
+
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+
+            return this;
+        }
+        public CategoryRepository Update(Category category, CreateCategoryViewModel createViewModel)
+        {
+            category.Name = createViewModel.Name;
+            _context.SaveChanges();
+            return this;
         }
 
+        public CategoryRepository Update(CreateCategoryViewModel createViewModel)
+        {
+            return Update(GetById(createViewModel.Id), createViewModel);
+        }
         public CategoryRepository Subscribe(string id, string userId)
         {
             _context.CategorySubscribers.Add(new CategorySubscriber
@@ -66,6 +88,18 @@ namespace CommunityPortal.Repositories
             return Unsubscribe(_context.CategorySubscribers
                 .FirstOrDefault(x => x.UserId.Equals(userId) && x.CategoryId.Equals(id))
             );
+        }
+        
+        public CategoryRepository GetUserSubscribed(string userId)
+        {
+            _categoryViewModels = _categoryViewModels.Where(x => x.IsSubscribed.Equals(true));
+           // _categoryViewModels = GetAllAsViewModelList(userId)._categoryViewModels.Where(x => x.IsSubscribed.Equals(true));
+            return this;
+        }
+        
+        public List<CategoryViewModel> ToList()
+        {
+            return _categoryViewModels.ToList();
         }
     }
 }

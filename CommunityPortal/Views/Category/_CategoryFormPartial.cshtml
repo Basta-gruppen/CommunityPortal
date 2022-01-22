@@ -1,0 +1,29 @@
+@model CreateCategoryViewModel
+@{
+    var actionName = string.IsNullOrEmpty(Model.Id) ? "Create" : "Update";
+}
+<div class="card">
+    <div class="card-header">
+        @actionName category as @User.Identity.Name
+    </div>
+    <div class="card-body">
+        @using (var form = Html.BeginForm(actionName, "Category", FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.Id)
+            <div class="mb-3 row">
+                <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="Name" class="form-control"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2 col-form-label"></div>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-sm btn-primary btn-block mb-3">Submit</button>
+                    @Html.ValidationSummary()
+                </div>
+            </div>
+        }
+    </div>
+</div>

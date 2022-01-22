@@ -132,7 +132,7 @@ namespace CommunityPortal.Controllers
             if (post == null) return View(createPostViewModel);
 
             return View(PostFactory
-                .CreateViewModel(post, _userManager.GetUserId(User)));
+                .ViewModel(post, _userManager.GetUserId(User)));
         }
 
         [HttpPost]

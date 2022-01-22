@@ -9,7 +9,7 @@ namespace CommunityPortal.Factories
 {
     public class PostFactory
     {
-        public static Post Create(CreatePostViewModel createViewModel, string userId = null)
+        public static Post Model(CreatePostViewModel createViewModel, string userId = null)
         {
             return new Post
             {
@@ -23,7 +23,7 @@ namespace CommunityPortal.Factories
             };
         }
 
-        public static CreatePostViewModel CreateViewModel(Post post, string userId)
+        public static CreatePostViewModel ViewModel(Post post, string userId)
         {
             var createPostViewModel = new CreatePostViewModel
             {

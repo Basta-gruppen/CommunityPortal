@@ -1,0 +1,63 @@
+﻿@model List<CategoryViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+    var createCategoryViewModel = ViewBag.Category?? new CreateCategoryViewModel();
+}
+<a href="@ViewBag.RSS">RSS for all subscribed categories</a>
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Post count</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var categoryViewModel in Model)
+    {
+        var subscribeState = categoryViewModel.IsSubscribed ? "Unsubscribe" : "Subscribe";
+        <tr>
+            <th scope="row">@categoryViewModel.Id</th>
+            <td>
+                <a
+                    asp-controller="Post"
+                    asp-action="Category"
+                    asp-route-category="@categoryViewModel.Name">
+                    @categoryViewModel.Name
+                </a>/
+                <a
+                    asp-controller="Feed"
+                    asp-action="Index"
+                    asp-route-categories="@categoryViewModel.Name">
+                    RSS
+                </a>
+            </td>
+            <td>@categoryViewModel.PostCount</td>
+            <td>
+                <div class="btn-group" role="group">
+                    <a
+                        class="link-btn btn btn-primary"
+                        asp-controller="Category"
+                        asp-action="@subscribeState"
+                        asp-route-id="@categoryViewModel.Id">
+                        @subscribeState
+                    </a>
+                    <a
+                        class="link-btn btn btn-primary"
+                        asp-controller="Category"
+                        asp-action="Edit"
+                        asp-route-id="@categoryViewModel.Id">
+                        Edit
+                    </a>
+                    <button type="button" class="btn btn-danger">Remove</button>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<partial name="_CategoryFormPartial" model="@createCategoryViewModel;"/>
