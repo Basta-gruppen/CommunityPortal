@@ -1,5 +1,7 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -11,9 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
 using CommunityPortal.Repositories;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CommunityPortal
 {
@@ -42,6 +47,18 @@ namespace CommunityPortal
                 .AddDefaultUI();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            
+            services
+                .AddMvc(
+                    options =>
+                    {
+                        if (!Debugger.IsAttached)
+                        {
+                            options.RequireHttpsPermanent = true;
+                        }
+                        
+                        options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -50,6 +50,15 @@ namespace CommunityPortal.Repositories
                 );
             return this;
         }
+        
+        public PostRepository ByCategoryNames(string[] categories)
+        {
+            _posts = _posts
+                .Where(
+                    post => categories.Contains(post.Category.Name)
+                );
+            return this;
+        }
 
         public PostRepository ByUserSubscribedCategory(string userId)
         {

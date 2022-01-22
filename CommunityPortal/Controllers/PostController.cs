@@ -26,7 +26,6 @@ namespace CommunityPortal.Controllers
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
         }
-
         protected IPagedList<Post> GetPagedPosts(int? page)
         {
             // return a 404 if user browses to before the first page
