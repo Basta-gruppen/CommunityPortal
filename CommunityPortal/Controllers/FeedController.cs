@@ -34,7 +34,10 @@ namespace CommunityPortal.Controllers
                 Channel = new RssChannel
                 {
                     Title = "Posts - CommunityPortal",
-                    Link = "Demo",
+                    Link = Url.Action(
+                        action: "Index",
+                        controller: "Home"
+                        ),
                     Language = "en-US",
                     Items = new List<RssChannelItem>()
                 }
