@@ -64,6 +64,19 @@ namespace CommunityPortal.Repositories
         {
             return Update(GetById(createViewModel.Id), createViewModel);
         }
+        
+        public CategoryRepository Delete(Category category)
+        {
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            return this;
+        }
+
+        public CategoryRepository Delete(string id)
+        {
+            var category = _context.Categories.Find(id);
+            return Delete(category);
+        }
         public CategoryRepository Subscribe(string id, string userId)
         {
             _context.CategorySubscribers.Add(new CategorySubscriber

@@ -4,6 +4,7 @@ using CommunityPortal.Repositories;
 using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Controllers
 {
@@ -72,6 +73,22 @@ namespace CommunityPortal.Controllers
         public IActionResult Create(CreateCategoryViewModel createViewModel)
         {
             _categoryRepository.Create(createViewModel);
+            return RedirectToAction(nameof(Index));
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                _categoryRepository.Delete(id);
+            }
+            catch (DbUpdateException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
