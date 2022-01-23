@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
@@ -60,7 +61,7 @@ namespace CommunityPortal.Controllers
                                  Category = post.Category.Name,
                                  Guid = post.Id,
                                  Title = post.Subject,
-                                 Description = post.Content,
+                                 Description = Regex.Replace(post.Content, "<.*?>", string.Empty),
                                  Link = Url.Action(
                                      "View",
                                      "Post",
