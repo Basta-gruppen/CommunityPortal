@@ -1,13 +1,13 @@
-﻿@model IEnumerable<Post>
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using X.PagedList
+@model IEnumerable<Post>
 
 @{
     ViewBag.Title = "Post Index";
     Layout = "_Layout";
 }
-
-@using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
-@using X.PagedList; 
-@using X.PagedList.Web.Common
+@*import this so we get our HTML Helper*@
 
 @section Scripts
 {
@@ -32,11 +32,13 @@
                             <a class="nav-link active" aria-current="true">Post</a>
                         </li>
                         <li class="nav-item">
-                            <a 
-                                class="nav-link link-dark" 
+                            <a
+                                class="nav-link link-dark"
                                 asp-controller="Post"
                                 asp-action="Edit"
-                                asp-route-id="@post.Id">Edit</a>
+                                asp-route-id="@post.Id">
+                                Edit
+                            </a>
                         </li>
                         <li class="nav-item">
                             <form method="Post" action="@Url.Action("Delete", "Post")">
@@ -59,7 +61,7 @@
                         </a>
                     }
                     <h5 class="card-title">@post.Subject</h5>
-                    <p class="card-text">@post.Content</p>
+                    <p class="card-text">@Html.Raw(post.Content)</p>
                     <a class="btn btn-primary btn-sm"
                        asp-controller="Post"
                        asp-action="View"
@@ -67,27 +69,27 @@
                         Read more →
                     </a>
                 </div>
-                  <div class="card-footer small text-muted">
-                        Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
-                        in
-                        <a
-                            class="text-decoration-none"
-                            asp-controller="Post"
-                            asp-action="Category"
-                            asp-route-category="@post.Category.Name">
-                            @post.Category.Name
-                        </a>
-                  </div>
+                <div class="card-footer small text-muted">
+                    Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
+                    in
+                    <a
+                        class="text-decoration-none"
+                        asp-controller="Post"
+                        asp-action="Category"
+                        asp-route-category="@post.Category.Name">
+                        @post.Category.Name
+                    </a>
+                </div>
             </div>
         }
 
-        <!-- Pagination-->        
-        @Html.PagedListPager((IPagedList)Model, page => Url.Action(null, new { page }), new PagedListRenderOptions
+        <!-- Pagination-->
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action(null, new {page}), new PagedListRenderOptions
         {
-            PageClasses = new string[] { "page-link" },
-            UlElementClasses = new string[] { "pagination justify-content-center my-4" },
-            LiElementClasses = new string[] { "page-item" },
-            DisplayItemSliceAndTotal = true,
+            PageClasses = new[] {"page-link"},
+            UlElementClasses = new[] {"pagination justify-content-center my-4"},
+            LiElementClasses = new[] {"page-item"},
+            DisplayItemSliceAndTotal = true
         })
     </div>
     <partial name="_PostSideBarPartial"/>
