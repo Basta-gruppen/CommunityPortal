@@ -1,22 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using CommunityPortal.Data;
 using CommunityPortal.Factories;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityPortal.Repositories
 {
     public class PostRepository
     {
+        private readonly IHttpContextAccessor _accessor;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private IQueryable<Post> _posts;
 
-        public PostRepository(ApplicationDbContext context)
+        public PostRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor)
         {
             _context = context;
+            _userManager = userManager;
+            _accessor = accessor;
+        }
+        
+        private ClaimsPrincipal GetUser() {
+            return _accessor?.HttpContext?.User;
         }
 
         public PostRepository GetAll()
@@ -60,8 +71,20 @@ namespace CommunityPortal.Repositories
             return this;
         }
 
-        public PostRepository ByUserSubscribedCategory(string userId)
+        public PostRepository ByUserSubscribedCategory()
         {
+            var user = GetUser();
+            if (!user.Identity.IsAuthenticated)
+            {
+                return this;
+            }
+            
+            var userId = _userManager.GetUserId(user);
+            
+            if (!_context.CategorySubscribers.Any(x => x.UserId.Equals(userId)))
+            {
+                return this;
+            }
             _posts = _posts
                 .Join(_context.CategorySubscribers,
                     post => post.CategoryId,
@@ -71,7 +94,6 @@ namespace CommunityPortal.Repositories
                         Post = post, categorySubscriber.UserId
                     }
                 ).Where(x => x.UserId.Equals(userId)).Select(p => p.Post);
-
             return this;
         }
 

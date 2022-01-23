@@ -65,7 +65,7 @@ namespace CommunityPortal.Controllers
         {
             _postRepository
                 .GetAll()
-                .ByUserSubscribedCategory(_userManager.GetUserId(User));
+                .ByUserSubscribedCategory();
             return ListPosts(page);
         }
 
