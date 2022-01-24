@@ -12,7 +12,10 @@
 
 @section Scripts
 {
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script type="module" src="~/js/Post.js"></script>
+    }
 }
 
 <a
