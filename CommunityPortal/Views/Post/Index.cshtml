@@ -2,12 +2,10 @@
 @using X.PagedList.Web.Common
 @using X.PagedList
 @model IEnumerable<Post>
-
 @{
     ViewBag.Title = "Post Index";
     Layout = "_Layout";
 }
-@*import this so we get our HTML Helper*@
 
 @section Scripts
 {
@@ -21,7 +19,6 @@
     New Post
 </a>
 <div class="row">
-    <!-- Blog entries-->
     <div class="col-lg-8">
         @foreach (var post in Model)
         {
@@ -82,7 +79,6 @@
                 </div>
             </div>
         }
-
         <!-- Pagination-->
         @Html.PagedListPager((IPagedList) Model, page => Url.Action(null, new {page}), new PagedListRenderOptions
         {
