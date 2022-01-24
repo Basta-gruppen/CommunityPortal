@@ -1,0 +1,33 @@
+﻿@model GroupDetailsViewModel
+
+@{
+    ViewBag.Title = Model.Group.Name + " Group";
+    Layout = "_Layout";
+}
+
+<h2>@Model.Group.Name</h2>
+<small>Owner: @Model.Owner.UserName</small>
+<div class="d-flex flex-column align-items-center">
+    <h4>Members</h4>
+    <div class="d-flex flex-row justify-content-center align-items-center mb-5">
+        @{
+            foreach (var member in Model.Members)
+            {
+                <p class="border rounded-2 border-light m-0 me-2 p-3">@member.UserName</p>
+            }
+        }
+    </div>
+    
+    @{
+        if (Model.IsOwner)
+        {
+            <div class="d-inline-flex">
+                <form method="post" action="@Url.Action("Delete", "Group")">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" value="@Model.Group.Id" name="id"/>
+                    <button type="submit" class="btn btn-danger">Delete @Model.Group.Name Group</button>
+                </form>
+            </div>
+        }
+    }
+</div>

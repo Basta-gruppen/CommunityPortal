@@ -1,0 +1,11 @@
+﻿@model IEnumerable<SubForum>
+
+@{
+    foreach (SubForum subForum in Model)   
+    {
+        <div class="p-3 border-bottom border-light">
+            <a class="text-dark fw-bold m-0 mb-1 text-decoration-none text-truncate" href="@Url.Action("Details", "SubForum", new { id = subForum.Id })">@subForum.Name</a>
+            <p class="text-dark m-0 ms-3 text-truncate">@subForum.Description</p>
+        </div>
+    }
+}

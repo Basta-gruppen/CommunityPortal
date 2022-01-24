@@ -1,0 +1,19 @@
+﻿@model CreateThreadViewModel
+
+@{
+    ViewBag.Title = "Create new thread";
+    Layout = "_Layout";
+}
+
+<h2 class="text-truncate mb-5">New Thread in @Model.Thread.SubForum.Name</h2>
+
+<form class="d-flex flex-column" method="Post" action="@Url.Action("Create", "Thread")">
+    @Html.AntiForgeryToken()
+    <input hidden value="@Model.Thread.SubForum.Id" name="Thread.SubForumId"/>
+
+    <input id="Subject" name="Thread.Subject" placeholder="Subject" class="form-control mb-2" required maxlength="255"/>
+    <textarea class="form-control mb-2" id="Content" name="Reply.Content" placeholder="Content"></textarea>
+    <div class="d-flex flex-row justify-content-end">
+        <button id="ButtonCreateConfirm" class="btn btn-success text-white" type="submit">Create</button>
+    </div>
+</form>

@@ -1,0 +1,42 @@
+﻿@using CommunityPortal.Controllers
+@model EditSubForumViewModel
+
+@{
+    ViewBag.Title = "Editing " + Model.SubForum.Name;
+    Layout = "_Layout";
+}
+
+<h2 class="text-truncate mb-5">Editing @Model.SubForum.Name</h2>
+
+<form class="d-flex flex-column" method="Post" action="@Url.Action("Update", "SubForum")">
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(model => model.SubForum.Id)
+
+    @Html.LabelFor(model => model.SubForum.Name)
+    @Html.TextBoxFor(model => model.SubForum.Name, new {@class = "form-control mb-2"})
+    
+    @Html.LabelFor(model => model.SubForum.Description)
+    @Html.TextBoxFor(model => model.SubForum.Description, new {@class = "form-control mb-2"})
+    
+    @Html.LabelFor(model => model.SubForum.Forum)
+    <select class="form-select mb-2" size="3" name="SubForum.ForumId" required>
+        @{
+            foreach (var forum in Model.Forums)
+            {
+                if (Model.SubForum.ForumId == forum.Id)
+                {
+                    <option value="@forum.Id" selected="selected">@forum.Name (Current)</option>
+                }
+                else
+                {
+                    <option value="@forum.Id">@forum.Name</option>
+                }
+            }
+        }
+    </select>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-success" type="submit">Update</button>
+    </div>
+</form>

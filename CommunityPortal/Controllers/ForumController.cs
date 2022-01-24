@@ -18,7 +18,7 @@ namespace CommunityPortal.Controllers
             _context = applicationDbContext;
         }
         
-        public IActionResult Index(string status)
+        public IActionResult Index()
         {
             List<Forum> forums = _context.Forums.Include(f => f.SubForums).ToList();
 
@@ -84,6 +84,29 @@ namespace CommunityPortal.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(Forum editedForum)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Forums.Find(editedForum.Id).Name = editedForum.Name;
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Details), new {id = editedForum.Id});
+            }
+
+            return BadRequest("Model state not valid");
         }
     }
 }

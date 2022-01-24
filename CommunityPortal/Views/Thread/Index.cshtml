@@ -5,7 +5,20 @@
     Layout = "_Layout";
 }
 
+@section Scripts
+{
+    <script src="~/js/AjaxForm.js"></script>
+    <script src="~/js/ToggleElement.js"></script>
+}
+
+@{
+    DeleteButtonViewModel deleteButtonViewModel = new DeleteButtonViewModel() {Controller = "Thread", Id = Model.Id};
+}
+
 <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
+    <div class="d-flex flex-row justify-content-end">
+        <partial name="_DeleteButton" model="deleteButtonViewModel"/>
+    </div>
     <div class="border-bottom border-dark border-1 p-3">
         <div class="d-flex flex-row justify-content-between border-bottom border-light border-1 mb-2 p-2">
             <h5 class="text-dark fw-bold m-0">@Model.Subject</h5>
@@ -23,20 +36,18 @@
     </div>
     @{
         Model.Replies.RemoveAt(0);
-        foreach (Reply reply in Model.Replies)   
-        {
-            <div class="d-flex flex-row p-3 border border-bottom border-light">
-                <div class="d-inline-flex flex-column border-end border-1 border-light">
-                    <img class="img-thumbnail" src="@reply.User.ImageURL" alt="@reply.User.UserName's avatar"/>
-                    <small class="text-dark m-0 text-center">@reply.User.UserName</small>
-                </div>
-                <div class="d-flex flex-column w-100 justify-content-between">
-                    <p class="p-3 m-0 text-dark">@reply.Content</p>
-                    <div class="d-flex justify-content-end">
-                        <small class="text-dark">@reply.TimeStamp</small>
-                    </div>
-                </div>
-            </div>
-        }
+        <partial name="_ReplyListPartial" model="@Model.Replies"/>
     }
 </div>
+
+<div>
+    <div class="d-flex flex-row-reverse">
+        <button class="btn btn-primary" onclick="ToggleElement('CreateReplyContainer')">&#9998;</button>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <partial name="_ReplyCreatePartial" model="@Model.Id"/>
+    </div>
+</div>
+
+
+

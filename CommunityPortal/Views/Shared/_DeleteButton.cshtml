@@ -1,0 +1,7 @@
+﻿@model DeleteButtonViewModel
+
+<form method="Post" action="@Url.Action(Model.Action, Model.Controller)">
+    @Html.AntiForgeryToken()
+    <input type="hidden" value="@Model.Id" name="ID"/>
+    <button class="btn btn-sm btn-danger" type="submit">X</button>
+</form>

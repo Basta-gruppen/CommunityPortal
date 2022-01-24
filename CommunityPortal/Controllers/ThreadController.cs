@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
+using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,23 +31,58 @@ namespace CommunityPortal.Controllers
                 .ThenInclude(r => r.User)
                 .FirstOrDefault(t => t.Id == id);
 
+            if (thread == null)
+            {
+                return NotFound();
+            }
+            
             thread.Replies = thread.Replies.OrderBy(r => r.TimeStamp).ToList();
             
             return View(thread);
         }
+
+        [HttpGet]
+        public IActionResult Create(string subForumId)
+        {
+            CreateThreadViewModel createThreadViewModel = new CreateThreadViewModel()
+            {
+                Thread = new Thread()
+                {
+                    SubForum = _context.SubForums.Find(subForumId)
+                }
+            };
+
+            return View(createThreadViewModel);
+        }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Thread newThread)
+        public IActionResult Create(CreateThreadViewModel createThreadViewModel)
         {
             // TODO: Remove line below because user needs to be logged in to create
-            newThread.UserId = _context.Users.ToList()[0].Id;
+            string posterId = _context.Users.ToList()[0].Id;
             
-            newThread.Id = Guid.NewGuid().ToString();
+            DateTime timestamp = DateTime.Now;
+
+            createThreadViewModel.Thread.UserId = posterId;
+            ModelState.Remove("Thread.UserId"); // Remove state since we are setting it manually
+            
+            createThreadViewModel.Thread.Id = Guid.NewGuid().ToString();
+            createThreadViewModel.Thread.TimeStamp = timestamp;
+            
+            createThreadViewModel.Reply.UserId = posterId;
+            ModelState.Remove("Reply.UserId"); // Remove state since we are setting it manually
+            
+            createThreadViewModel.Reply.Id = Guid.NewGuid().ToString();
+            createThreadViewModel.Reply.ThreadId = createThreadViewModel.Thread.Id;
+            ModelState.Remove("Reply.ThreadId"); // Remove state since we are setting it manually
+            
+            createThreadViewModel.Reply.TimeStamp = timestamp;
 
             if (ModelState.IsValid)
             {
-                _context.Threads.Add(newThread);
+                _context.Threads.Add(createThreadViewModel.Thread);
+                _context.Replies.Add(createThreadViewModel.Reply);
                 try
                 {
                     _context.SaveChanges();
@@ -56,7 +92,7 @@ namespace CommunityPortal.Controllers
                     return BadRequest(e.Message);
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { id = createThreadViewModel.Thread.Id });
             }
             
             return BadRequest("Model state not valid");
@@ -78,7 +114,7 @@ namespace CommunityPortal.Controllers
                 return BadRequest(e.Message);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(SubForumController.Details), nameof(SubForum), new { id = thread.SubForumId });
         }
     }
 }
