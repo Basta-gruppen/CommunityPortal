@@ -1,5 +1,4 @@
-﻿import Tags from 'bootstrap5-tags'
-/* Import TinyMCE */
+﻿/* Import TinyMCE */
 import tinymce from 'tinymce';
 
 /* Default icons are required for TinyMCE 5.3 or above */

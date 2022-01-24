@@ -1,15 +1,21 @@
-﻿@using X.PagedList.Mvc.Core
+﻿@inject UserManager<ApplicationUser> _userManager
+@using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
 @using X.PagedList
 @model IEnumerable<Post>
 @{
     ViewBag.Title = "Post Index";
     Layout = "_Layout";
+    var user = await _userManager.GetUserAsync(User);
 }
 
 @section Scripts
 {
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script type="module" src="~/js/Post.js"></script>
+    }
 }
 
 <a
@@ -23,27 +29,34 @@
         @foreach (var post in Model)
         {
             <div class="card mb-4">
+
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="true">Post</a>
                         </li>
-                        <li class="nav-item">
-                            <a
-                                class="nav-link link-dark"
-                                asp-controller="Post"
-                                asp-action="Edit"
-                                asp-route-id="@post.Id">
-                                Edit
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="Post" action="@Url.Action("Delete", "Post")">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" value="@post.Id" name="ID"/>
-                                <button class="nav-link link-danger" type="submit">Remove</button>
-                            </form>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (post.UserId.Equals(user?.Id) || User.IsInRole("Administrators"))
+                            {
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link link-dark"
+                                        asp-controller="Post"
+                                        asp-action="Edit"
+                                        asp-route-id="@post.Id">
+                                        Edit
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <form method="Post" action="@Url.Action("Delete", "Post")">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" value="@post.Id" name="ID"/>
+                                        <button class="nav-link link-danger" type="submit">Remove</button>
+                                    </form>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
                 <div class="card-body">
@@ -85,7 +98,7 @@
             PageClasses = new[] {"page-link"},
             UlElementClasses = new[] {"pagination justify-content-center my-4"},
             LiElementClasses = new[] {"page-item"},
-            DisplayItemSliceAndTotal = true
+            DisplayItemSliceAndTotal = false
         })
     </div>
     <partial name="_PostSideBarPartial"/>

@@ -104,7 +104,10 @@ namespace CommunityPortal.Controllers
         public IActionResult Create()
         {
             ViewBag.Categories = _context.Categories.ToList();
-            return View();
+            return View(
+                viewName: "Edit",
+                new CreatePostViewModel()
+                );
         }
 
         [HttpPost]

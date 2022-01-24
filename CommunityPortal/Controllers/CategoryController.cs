@@ -92,7 +92,7 @@ namespace CommunityPortal.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Subscribe(string id)
         {
             _categoryRepository.Subscribe(
@@ -100,10 +100,11 @@ namespace CommunityPortal.Controllers
                 _userManager.GetUserId(User)
             );
 
+            return RedirectToAction(nameof(Index));
             return RedirectToAction("Index", "Category");
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult UnSubscribe(string id)
         {
             _categoryRepository.Unsubscribe(
@@ -111,6 +112,7 @@ namespace CommunityPortal.Controllers
                 _userManager.GetUserId(User)
             );
 
+            return RedirectToAction(nameof(Index));
             return RedirectToAction("Index", "Category");
         }
     }

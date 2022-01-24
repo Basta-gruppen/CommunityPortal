@@ -1,2 +1,97 @@
 ﻿@model CreatePostViewModel
-<partial name="_PostFormPartial" model="@Model;"/>
+@{
+    var actionName = string.IsNullOrEmpty(Model.Id) ? "Create" : "Update";
+}
+@section Scripts
+{
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#Content',
+            menubar: false,
+            statusbar: false,
+            plugins: 'autoresize anchor autolink charmap code codesample directionality fullpage help hr image imagetools insertdatetime link lists media nonbreaking pagebreak preview print searchreplace table template textpattern toc visualblocks visualchars',
+            toolbar: 'h4 h5 bold italic strikethrough blockquote bullist numlist backcolor | link image media | removeformat help fullscreen ',
+            skin: 'bootstrap',
+            toolbar_drawer: 'floating',
+            min_height: 200,
+            autoresize_bottom_margin: 16,
+            setup: (editor) => {
+                editor.on('init', () => {
+                    editor.getContainer().style.transition="border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out"
+                });
+                editor.on('focus', () => {
+                    editor.getContainer().style.boxShadow="0 0 0 .2rem rgba(0, 123, 255, .25)"
+                    editor.getContainer().style.borderColor="#80bdff"
+                });
+                editor.on('blur', () => {
+                    editor.getContainer().style.boxShadow=""
+                    editor.getContainer().style.borderColor=""
+                });
+            }
+        });
+    </script>
+}
+<link rel="stylesheet" href="~/dist/tinyMCE.css">
+<div class="card">
+    <div class="card-header">
+        @actionName post as @User.Identity.Name
+    </div>
+    <div class="card-body">
+        @using (var form = Html.BeginForm(actionName, "Post", FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.Id)
+            <div class="mb-3 row">
+                <label asp-for="CategoryId" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CategoryId,
+                        new SelectList(ViewBag.Categories, "Id", "Name"),
+                        new {@class = "form-select"})
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="TagList" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.ListBoxFor(x => x.SelectedTagIds,
+                        Model.TagList,
+                        new
+                        {
+                            @class = "form-control",
+                            data_allow_clear = "true",
+                            data_suggestions_threshold = "0",
+                            data_allow_new = "true",
+                            data_server = "/Tag/Get",
+                            data_live_server = "1"
+                        })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label asp-for="Subject" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="Subject" class="form-control"/>
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="staticAuthor" class="col-sm-2 col-form-label">Authur</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="staticAuthor" value="@User.Identity.Name">
+                </div>
+            </div>
+            <!-- Message input -->
+            <div class="mb-3 row">
+                <label asp-for="Content" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.Content, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2 col-form-label"></div>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-sm btn-primary btn-block mb-3">Submit</button>
+                    @Html.ValidationSummary()
+                </div>
+            </div>
+        }
+    </div>
+</div>
