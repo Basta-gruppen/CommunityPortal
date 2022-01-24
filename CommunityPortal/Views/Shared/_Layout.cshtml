@@ -46,9 +46,10 @@
         &copy; 2022 - CommunityPortal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
-
-<script src="~/dist/bootstrap_js.entry.js"></script>
-<script src="~/js/ErrorMessageHandler.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="module" src="~/dist/bootstrap_js.entry.js"></script>
+<script type="module" src="~/dist/validation.entry.js"></script>
+<script type="module" src="~/js/ErrorMessageHandler.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

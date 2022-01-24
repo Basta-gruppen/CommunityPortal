@@ -1,4 +1,5 @@
 ﻿const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
         site: './src/js/site.js',
         bootstrap_js: './src/js/bootstrap_js.js',
         validation: './src/js/validation.js',
-        index: './src/js/index.js'
+        tinyMCE: './src/js/tinymce.js',
     },
     output: {
         filename: '[name].entry.js',
@@ -16,6 +17,14 @@ module.exports = {
     mode: 'development',
     module: {
         rules: [
+            {
+                test: /skin\.css$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+            {
+                test: /content\.css$/i,
+                use: ['css-loader'],
+            },
             {
                 test: /\.(scss)$/,
                 use: [{
@@ -59,6 +68,10 @@ module.exports = {
         require('autoprefixer'),
         new MiniCssExtractPlugin({
             filename: "[name].css"
+        }),
+        new HtmlWebpackPlugin({
+            title: 'TinyMCE Webpack Demo',
+            meta: {viewport: 'width=device-width, initial-scale=1'}
         })
     ]
 };
