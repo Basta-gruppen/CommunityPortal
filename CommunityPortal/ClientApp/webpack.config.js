@@ -6,8 +6,7 @@ module.exports = {
     entry: {
         site: './src/js/site.js',
         bootstrap_js: './src/js/bootstrap_js.js',
-        validation: './src/js/validation.js',
-        tinyMCE: './src/js/tinymce.js',
+        validation: './src/js/validation.js'
     },
     output: {
         filename: '[name].entry.js',
