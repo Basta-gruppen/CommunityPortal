@@ -13,7 +13,10 @@ namespace CommunityPortal.Models
         [Required]
         [MaxLength(256)]
         public string Name { get; set; }
+        [Required]
+        public string OwnerId { get; set;  }
 
+        public ApplicationUser Owner { get; set; }
         public List<UserGroup> UserGroups { get; set; }
         public List<SubForumGroup> SubForumGroups { get; set; }
     }

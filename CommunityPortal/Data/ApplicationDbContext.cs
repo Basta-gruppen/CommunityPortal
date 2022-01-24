@@ -41,7 +41,7 @@ namespace CommunityPortal.Data
             base.OnModelCreating(builder);
 
             #region Relations
-
+            
             builder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
             builder.Entity<UserGroup>()
                 .HasOne(ug => ug.User)
@@ -258,16 +258,19 @@ namespace CommunityPortal.Data
                 new Group()
                 {
                     Id = Guid.NewGuid().ToString(),
+                    OwnerId = applicationUsers[0].Id,
                     Name = "Gamers"
                 },
                 new Group()
                 {
                     Id = Guid.NewGuid().ToString(),
+                    OwnerId = applicationUsers[1].Id,
                     Name = "Programmers"
                 },
                 new Group()
                 {
                     Id = Guid.NewGuid().ToString(),
+                    OwnerId = applicationUsers[0].Id,
                     Name = "General"
                 }
             };
