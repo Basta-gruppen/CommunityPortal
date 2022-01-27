@@ -44,19 +44,16 @@
     {
         <script src="~/js/Message.js"></script>
     }
-    <div class="card" id="getMessage">
+<div class="card" id="getMessage">
+    <partial name="_MessagePartial" model="@Model.Messages"/>
+</div>
 
-        @foreach (Message message in Model.Messages)
-        {
-            <partial action="_MessagePartial" model="message" />
-
-        }
-        </div>
 <div class="accordion-item">
-    <form id="AjaxForm">
-        <input id="message" hidden value="@Model.Id" name="id" />
-        <input id="content" name="username" placeholder="type" />
-        <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
-    </form>
+    @*<form id="AjaxForm">*@
+        <input id="message" name="id" value="@Model.Id" hidden/>
+        <input id="content" name="username" placeholder="type"/>
+        <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()"/>
+
+    @*</form>*@
 </div>
 

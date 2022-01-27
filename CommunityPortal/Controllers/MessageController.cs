@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,12 +25,14 @@ namespace CommunityPortal.Controllers
         {
             List<Message> message = dbContext.Messages.Include(m => m.User).ThenInclude(c => c.UserConversations).Where
                 (c => c.ConversationId == id).OrderByDescending(m=>m.TimeStamp).ToList();
+            
+            Conversation conversation =
+                dbContext.Conversations
+                    .Include(c => c.Messages)
+                    .FirstOrDefault(c => c.Id == id);
 
-            Conversation conversation = new Conversation()
-            {
-                Messages = message
-            };
-
+            if (conversation == null)
+                return NotFound();
 
             //if (message.Count<=0)
             //{
@@ -40,8 +43,8 @@ namespace CommunityPortal.Controllers
 
             
         }
-        public IActionResult Create()
-        { return View(); }
+        /*public IActionResult Create()
+        { return View(); }*/
         [HttpPost]
         public IActionResult Create(string content,string id)
         { 
@@ -55,7 +58,15 @@ namespace CommunityPortal.Controllers
             };
             dbContext.Messages.Add(messages);
             dbContext.SaveChanges();
-            return View();
+
+
+            IEnumerable<Message> allMessages = dbContext.Messages
+                .Include(m => m.User)
+                .Where(m => m.ConversationId == id)
+                .ToList();
+            
+            return PartialView("_MessagePartial", allMessages);
+            //return View();
             //return RedirectToAction("MessageInConversation");
         }
 
