@@ -1,6 +1,7 @@
 ﻿using CommunityPortal.Data;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,57 +17,116 @@ namespace CommunityPortal.Controllers
     public class ConversationController : Controller
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ConversationController(ApplicationDbContext context)
+        public ConversationController(ApplicationDbContext context,UserManager<ApplicationUser> applicationUser)
         {
             dbContext = context;
+            userManager = applicationUser;
         }
         
+        [Authorize]
         public IActionResult Index()
-        {
-            //ClaimsPrincipal currentUser = this.User;
-            //var CurrentUserName = currentUser.Identity.Name.ToString();
-
-            //ViewBag.AllUser = dbContext.Users.Where(u => u.UserName != CurrentUserName).ToList();
-            List<ApplicationUser> users= dbContext.Users.ToList();
-
-            return View(users);
-        }
-       
-        
-       
-         
-
-        public IActionResult CreateConversation()
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult CreateConversation(string id)
+
+        [HttpGet]
+        public IActionResult UserIndex()
         {
-            //if (ModelState.IsValid)
-            //{
-            //    dbContext.Conversations.Add(conversation);
-            //    dbContext.SaveChanges();
-            //    RedirectToAction("Conversation");
-            //}
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-
-            List<Message> messages = new List<Message>()
-            {
-                new Message()
-                {
-                    Content=id,
-                    UserId=Guid.NewGuid().ToString(),
-                    ConversationId=Guid.NewGuid().ToString(),
-                    TimeStamp=new DateTime()
-                }
-            };
-            return PartialView("_MessagePartialView", messages);
-
-            //return View();
+            List<ApplicationUser> users = dbContext.Users.Where(u => u.Id != currentUserID).ToList();
+            return PartialView("_UserPartial",users);
         }
 
+
+        [HttpGet]
+        public IActionResult Conversation()
+        {
+            var currentUser = userManager.GetUserId(User);
+           
+            List<Conversation> userConversations = dbContext.UserConversations.Include(uc => uc.Conversation)
+                .Where(uc => uc.UserId == currentUser).Select(uc => uc.Conversation).ToList();
+
+           
+            return PartialView("_ConversationPartialView",userConversations);
+        } 
+        public IActionResult Create()
+        { return View(); }
+        [HttpPost]
+        public IActionResult Create(CreateConversationViewModel createConversation, string id)
+        {
+            //if (dbContext.UserConversations.Any(uc => uc.UserId == id))
+            //{
+            //    return BadRequest("Conversation is created With This User Select From Conversation");
+            //}
+            
+            
+                Conversation newConversation = new Conversation()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Subject = createConversation.Subject
+                };
+                dbContext.Add(newConversation);
+                dbContext.SaveChanges();
+
+            List<UserConversation> userConversations = new List<UserConversation>()
+            {
+                new UserConversation()
+                {
+                    ConversationId=newConversation.Id,
+                    UserId= userManager.GetUserId(User)
+                },
+                new UserConversation()
+                {
+                    ConversationId=newConversation.Id,
+                    UserId=id
+                }
+            };
+
+                dbContext.UserConversations.AddRange(userConversations);
+
+                dbContext.SaveChanges();
+            
+            return View();
+        }
+        
+        //public IActionResult CreateConversation()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult CreateConversation(string content,string id)
+        //{
+
+            
+        //    Message messages = new Message()
+        //    {
+                
+        //            Id=Guid.NewGuid().ToString(),
+        //            Content=content,
+        //            UserId=userManager.GetUserId(User),
+        //            ConversationId=id,
+        //            TimeStamp=new DateTime() 
+                
+        //    };
+        //    dbContext.Messages.Add(messages);
+        //    dbContext.SaveChanges();
+
+        //    return View();
+
+            
+        //}
+        
+        public IActionResult Delete(string id)
+        {
+           
+            dbContext.Conversations.Remove(dbContext.Conversations.Find(id));
+            dbContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
     }
 }

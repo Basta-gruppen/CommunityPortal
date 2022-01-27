@@ -1,28 +1,45 @@
-﻿@model IEnumerable<CommunityPortal.Models.Message>
-
-@foreach (var item in Model)
+﻿@model Conversation
+@section scripts
 {
-
-<div class="row">
-    @*<div class="col-md-3">
-        @item.Id
-    </div>*@
-    <div class="col-md-3">
-        @item.Content
-    </div>
-    <div class="col-md-3">
-        @item.UserId
-    </div>
-
-    <div class="col-md-3">
-        @item.ConversationId
-    </div>
-    <div class="col-md-3">
-        @item.TimeStamp
-    </div>
-
-
-
-
-</div>
+    <script src="~/js/Message.js"></script>
 }
+
+
+@foreach (Message message in Model.Messages)
+{
+<div class="border border-4 d-sm-flex" id="getMessage">
+    <div class="row">
+        @*<div class="col-md-3">
+                @item.Id
+            </div>*@
+        <div class="col-md-3">
+            @message.Content
+        </div>
+        <div class="col-md-3">
+            @message.User.UserName
+        </div>
+
+        @*<div class="col-md-3">
+                @item.ConversationId
+            </div>*@
+        <div class="col-md-3">
+            @message.TimeStamp
+        </div>
+
+
+
+
+    </div>
+</div>
+        }
+    
+    <div class="accordion-item">
+       
+           
+            <input id="message"  placeholder="type" />
+            
+            <input type="hidden" value="@Model.Id" />
+            <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
+       
+            </div>
+    <div class="accordion-button"><a asp-controller="Conversation" asp-action="Index">Back</a></div>

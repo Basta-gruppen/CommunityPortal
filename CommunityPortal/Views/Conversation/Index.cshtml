@@ -1,21 +1,43 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿
 @{
     ViewData["Title"] = "Index";
 }
 
+@section Scripts
+{ 
+    <script src="~/js/Message.js"></script>
+}
 
 
-    <p>Select User to send private message</p>
+<div>
+    <input type="button" class="btn-outline-secondary" onclick="getUser()" value="UserList"/><br /><br />
+    <input type="button" class="btn-outline-secondary" onclick="getConversation()" value="Conversations"/>
+</div><br />
+<br />
+<div class="card" id="UserList"></div>
+
+    @*@foreach (ApplicationUser user in Model)
+    {
+
+        <div class="container-fluid">
+            <a class="btn-outline-success" id="userId" href="@Url.Action("Create", "Conversation", new { id = user.Id })">@user.UserName</a>
+        </div>
+    }*@
+        @*<input type="hidden" value="@user.Id" id="userId" />*@
+
     
-        @foreach (ApplicationUser user in Model)
+
+    @*<div class="Container">
+        <a class="btn-outline-success" id="userId" href="@Url.Action("Conversation","Conversation")">Conversations</a>
+    </div>*@
+
+    @*@foreach (ApplicationUser user in Model)
         {
-           
+
             <div class="container-fluid">
                 <a class="btn-outline-success" asp-action="CreateConversation">@user.UserName</a>
             </div>
-                <input type="hidden" value="@user.Id" />
+            <input type="hidden" value="@user.Id" id="userId" />
 
-         }
-           
+        }*@
 
-          

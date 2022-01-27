@@ -1,0 +1,21 @@
+﻿@model Message
+@section scripts
+{
+    <script src="~/js/Message.js"></script>
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @Model.Content
+    </div>
+    <div class="col-md-3">
+        @Model.User.UserName
+    </div>
+    <div class="col-md-3">
+        @Model.TimeStamp
+    </div>
+    <div class="col-md-3">
+        <input class="btn-danger" type="button" value="x" onclick="location.href = '@Url.Action("Delete","Message",new { id = Model.Id })'" />
+    </div>
+
+</div>

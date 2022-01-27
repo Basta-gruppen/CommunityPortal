@@ -1,10 +1,18 @@
-﻿@model Message
+﻿@model IEnumerable<Conversation>
 @{
     ViewData["Title"] = "CreateConversation";
 }
+@section scripts
+{  
+    <script src="~/js/Message.js"></script>
+}
 
 
-<div class="border-4 d-sm-flex"  id="getMessage"></div>
+<div class="border border-4 d-sm-flex"  id="getMessage">
+    
+</div>
+
+<br />
 <div class="accordion-item">
     <input id="message" name="username" placeholder="type" />
     <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
@@ -12,4 +20,10 @@
    
 </div>
 <br />
+@*<div>
+    @foreach(Conversation conversation in Model)
+            {
+                <partial name="_ConversationPartial" model="conversation"/>
+            }
+</div>*@
 <div class="accordion-button"><a asp-action="Index">Back</a></div>
