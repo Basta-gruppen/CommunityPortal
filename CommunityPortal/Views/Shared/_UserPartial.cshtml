@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ApplicationUser>
+@section scripts
+{
+    <script src="~/js/Message.js"></script>
+}
+
+<p>Select User to send private message</p>
+
+@foreach (ApplicationUser user in Model)
+{
+    <div class="container-fluid border border-2">
+        <a class="btn-outline-success" id="userId" href="@Url.Action("Create", "Conversation", new { id = user.Id })">@user.UserName</a>
+    </div>
+}
