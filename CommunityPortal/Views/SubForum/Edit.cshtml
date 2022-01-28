@@ -1,9 +1,19 @@
-﻿@using CommunityPortal.Controllers
-@model EditSubForumViewModel
+﻿@model EditSubForumViewModel
 
 @{
     ViewBag.Title = "Editing " + Model.SubForum.Name;
     Layout = "_Layout";
+}
+
+@section Scripts
+{
+    <script>
+        $(".multiOption").mousedown(function(e) {
+            e.preventDefault();
+            $(this).prop('selected', !$(this).prop('selected'));
+            return false;
+        });
+    </script>
 }
 
 <h2 class="text-truncate mb-5">Editing @Model.SubForum.Name</h2>
@@ -36,6 +46,23 @@
         }
     </select>
 
+    @Html.LabelFor(model => model.AvailableGroups)
+    <select class="form-select mb-2" size="5" name="GroupIds" multiple required>
+        @{
+            foreach (var group in Model.AvailableGroups)
+            {
+                if (Model.SubForum.SubForumGroups.Select(sfg => sfg.GroupId).Contains(group.Id))
+                {
+                    <option class="multiOption" value="@group.Id" selected="selected">@group.Name</option>
+                }
+                else
+                {
+                    <option class="multiOption" value="@group.Id">@group.Name</option>
+                }
+            }
+        }
+    </select>
+    
     <div class="d-flex justify-content-end">
         <button class="btn btn-success" type="submit">Update</button>
     </div>

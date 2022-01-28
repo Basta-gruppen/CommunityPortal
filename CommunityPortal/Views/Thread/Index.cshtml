@@ -1,7 +1,7 @@
-﻿@model Thread
+﻿@model ThreadViewModel
 
 @{
-    ViewBag.Title = @Model.Subject;
+    ViewBag.Title = @Model.Thread.Subject;
     Layout = "_Layout";
 }
 
@@ -12,31 +12,44 @@
 }
 
 @{
-    DeleteButtonViewModel deleteButtonViewModel = new DeleteButtonViewModel() {Controller = "Thread", Id = Model.Id};
+    DeleteButtonViewModel deleteButtonViewModel = new DeleteButtonViewModel() {Controller = "Thread", Id = Model.Thread.Id};
 }
 
 <div class="d-flex flex-column rounded-1 border border-1 border-dark mb-4">
     <div class="d-flex flex-row justify-content-end">
-        <partial name="_DeleteButton" model="deleteButtonViewModel"/>
+        @{
+            if (@Model.IsOwner)
+            {
+                <partial name="_DeleteButton" model="deleteButtonViewModel"/>
+            }
+        }
     </div>
     <div class="border-bottom border-dark border-1 p-3">
         <div class="d-flex flex-row justify-content-between border-bottom border-light border-1 mb-2 p-2">
-            <h5 class="text-dark fw-bold m-0">@Model.Subject</h5>
-            <small class="text-dark m-0 align-middle">@Model.TimeStamp</small>
+            <div class="d-flex align-items-center">
+                <h5 class="text-dark fw-bold m-0 me-2">@Model.Thread.Subject</h5>
+                @{
+                    if (@Model.IsOwner)
+                    {
+                        <a class="btn btn-outline-warning" href="@Url.Action("Edit", "Thread", new {id = Model.Thread.Id})">&#9998;</a>
+                    }
+                }
+            </div>
+            <small class="text-dark m-0 align-middle">@Model.Thread.TimeStamp</small>
         </div>
         <div class="d-flex flex-row">
             <div class="d-inline-flex flex-column border-end border-1 border-light">
-                <img class="img-thumbnail" src="@Model.Replies[0].User.ImageURL" alt="@Model.Replies[0].User.UserName's avatar"/>
-                <small class="text-dark m-0 text-center">@Model.Replies[0].User.UserName</small>
+                <img class="img-thumbnail" src="@Model.Thread.Replies[0].User.ImageURL" alt="@Model.Thread.Replies[0].User.UserName's avatar"/>
+                <small class="text-dark m-0 text-center">@Model.Thread.Replies[0].User.UserName</small>
             </div>
             <div class="d-flex flex-column w-100 justify-content-between">
-                <p class="p-3 m-0 text-dark">@Model.Replies[0].Content</p>
+                <p class="p-3 m-0 text-dark">@Model.Thread.Replies[0].Content</p>
             </div>
         </div>
     </div>
     @{
-        Model.Replies.RemoveAt(0);
-        <partial name="_ReplyListPartial" model="@Model.Replies"/>
+        Model.Thread.Replies.RemoveAt(0);
+        <partial name="_ReplyListPartial" model="@Model.Thread.Replies"/>
     }
 </div>
 
@@ -45,7 +58,7 @@
         <button class="btn btn-primary" onclick="ToggleElement('CreateReplyContainer')">&#9998;</button>
     </div>
     <div class="d-flex flex-row justify-content-center">
-        <partial name="_ReplyCreatePartial" model="@Model.Id"/>
+        <partial name="_ReplyCreatePartial" model="@Model.Thread.Id"/>
     </div>
 </div>
 

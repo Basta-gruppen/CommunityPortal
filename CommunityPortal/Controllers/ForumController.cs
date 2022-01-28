@@ -1,26 +1,50 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
+using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CommunityPortal.Controllers
 {
+    [Authorize]
     public class ForumController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
-        public ForumController(ApplicationDbContext applicationDbContext)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ForumController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
             _context = applicationDbContext;
+            _userManager = userManager;
         }
         
         public IActionResult Index()
         {
-            List<Forum> forums = _context.Forums.Include(f => f.SubForums).ToList();
+            string currentUserId = _userManager.GetUserId(this.User);
+
+            List<Forum> forums = _context.Forums.ToList();
+            
+            List<string> usersGroupIds = _context.UserGroups
+                .Where(ug => ug.UserId == currentUserId)
+                .Select(ug => ug.GroupId)
+                .ToList();
+
+            List<SubForum> subForums = _context.SubForums
+                .Include(sf => sf.SubForumGroups)
+                .Where(sf => sf.OwnerId == currentUserId || sf.SubForumGroups.Any(sfg => usersGroupIds.Contains(sfg.GroupId)))
+                .ToList();
+
+            foreach (Forum forum in forums)
+            {
+                forum.SubForums = subForums.Where(sf => sf.ForumId == forum.Id).ToList();
+            }
 
             return View(forums);
         }
@@ -28,14 +52,25 @@ namespace CommunityPortal.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            Forum forum = _context.Forums
-                .Include(f => f.SubForums)
-                .FirstOrDefault(f => f.Id == id);
-
+            Forum forum = _context.Forums.Find(id);
+            
             if (forum == null)
             {
                 return NotFound();
             }
+            
+            string currentUserId = _userManager.GetUserId(this.User);
+            
+            List<string> usersGroupIds = _context.UserGroups
+                .Where(ug => ug.UserId == currentUserId)
+                .Select(ug => ug.GroupId)
+                .ToList();
+
+            forum.SubForums = _context.SubForums
+                .Where(sf => sf.ForumId == forum.Id)
+                .Include(sf => sf.SubForumGroups)
+                .Where(sf => sf.OwnerId == currentUserId || sf.SubForumGroups.Any(sfg => usersGroupIds.Contains(sfg.GroupId)))
+                .ToList();
 
             return View(forum);
         }
