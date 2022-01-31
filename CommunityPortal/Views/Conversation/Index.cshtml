@@ -10,34 +10,10 @@
 
 
 <div>
-    <input type="button" class="btn-outline-secondary" onclick="getUser()" value="UserList"/><br /><br />
+    <input type="button" class="btn-outline-secondary" onclick="getUser()" value="UsersOfCommunity"/><br /><br />
     <input type="button" class="btn-outline-secondary" onclick="getConversation()" value="Conversations"/>
 </div><br />
 <br />
-<div class="card" id="UserList"></div>
-
-    @*@foreach (ApplicationUser user in Model)
-    {
-
-        <div class="container-fluid">
-            <a class="btn-outline-success" id="userId" href="@Url.Action("Create", "Conversation", new { id = user.Id })">@user.UserName</a>
-        </div>
-    }*@
-        @*<input type="hidden" value="@user.Id" id="userId" />*@
+<div id="UserList"></div>
 
     
-
-    @*<div class="Container">
-        <a class="btn-outline-success" id="userId" href="@Url.Action("Conversation","Conversation")">Conversations</a>
-    </div>*@
-
-    @*@foreach (ApplicationUser user in Model)
-        {
-
-            <div class="container-fluid">
-                <a class="btn-outline-success" asp-action="CreateConversation">@user.UserName</a>
-            </div>
-            <input type="hidden" value="@user.Id" id="userId" />
-
-        }*@
-

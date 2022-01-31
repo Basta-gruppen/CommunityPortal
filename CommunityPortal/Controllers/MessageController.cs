@@ -24,8 +24,8 @@ namespace CommunityPortal.Controllers
         public IActionResult Index(string id)
         {
             List<Message> message = dbContext.Messages.Include(m => m.User).ThenInclude(c => c.UserConversations).Where
-                (c => c.ConversationId == id).OrderByDescending(m=>m.TimeStamp).ToList();
-            
+                (c => c.ConversationId == id).OrderBy(m => m.TimeStamp).ToList();
+
             Conversation conversation =
                 dbContext.Conversations
                     .Include(c => c.Messages)
@@ -34,10 +34,7 @@ namespace CommunityPortal.Controllers
             if (conversation == null)
                 return NotFound();
 
-            //if (message.Count<=0)
-            //{
-            //    return View("Create");
-            //}
+            
 
             return View(conversation);
 
@@ -63,6 +60,7 @@ namespace CommunityPortal.Controllers
             IEnumerable<Message> allMessages = dbContext.Messages
                 .Include(m => m.User)
                 .Where(m => m.ConversationId == id)
+                .OrderBy(m=>m.TimeStamp)
                 .ToList();
             
             return PartialView("_MessagePartial", allMessages);
@@ -91,7 +89,7 @@ namespace CommunityPortal.Controllers
 
             dbContext.Messages.Remove(dbContext.Messages.Find(id));
             dbContext.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
            
         }
 

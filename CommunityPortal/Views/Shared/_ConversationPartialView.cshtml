@@ -14,15 +14,15 @@
 </div>*@
 <br />
 
+<div class="card border border-1">
+    @foreach (Conversation conversation in Model)
+    {
+        <div class="d-flex flex-row justify-content-between">
+            <a class="border-success" href="@Url.Action("Index" ,"Message" ,new {id = conversation.Id })">@conversation.Subject</a>
 
-@foreach (Conversation conversation in Model)
-{
-    <div class="d-flex flex-row justify-content-between border border-2">
-        <a href="@Url.Action("Index" ,"Message" ,new {id = conversation.Id })">@conversation.Subject</a>
-        @*<a href="@Url.Action("Create" ,"Message" ,new {id = conversation.Id })">Send message</a>*@
-        <input class="btn-danger" type="button" value="X" onclick="location.href='@Url.Action("Delete" ,"Conversation" ,new {id = conversation.Id })'" />
-        @*<partial name="_ConversationPartial" model="conversation" />*@
-    </div>
-}
+            <input class="btn-danger" type="button" value="X" onclick="location.href='@Url.Action("Delete" ,"Conversation" ,new {id = conversation.Id })'" />
 
+        </div>
+    }
+</div>
 

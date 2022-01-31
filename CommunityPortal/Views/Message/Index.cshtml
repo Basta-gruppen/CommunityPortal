@@ -44,16 +44,17 @@
     {
         <script src="~/js/Message.js"></script>
     }
-<div class="card" id="getMessage">
-    <partial name="_MessagePartial" model="@Model.Messages"/>
+<div class="d-md-flex"></div>
+<div class="card align-content-center border border-2" id="getMessage">
+    <partial name="_MessagePartial" model="@Model.Messages" />
 </div>
 
-<div class="accordion-item">
-    @*<form id="AjaxForm">*@
-        <input id="message" name="id" value="@Model.Id" hidden/>
-        <input id="content" name="username" placeholder="type"/>
-        <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()"/>
+ <div class="card-footer">
+        @*<form id="AjaxForm">*@
+        <input id="message" name="id" value="@Model.Id" hidden />
+        <input id="content" name="username" placeholder="type" type="text"/>
+        <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
 
-    @*</form>*@
-</div>
+        @*</form>*@
+  </div>
 

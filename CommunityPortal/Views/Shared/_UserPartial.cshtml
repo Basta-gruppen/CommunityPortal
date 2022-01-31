@@ -5,10 +5,11 @@
 }
 
 <p>Select User to send private message</p>
-
+<div class="card border border-2">
 @foreach (ApplicationUser user in Model)
 {
-    <div class="container-fluid border border-2">
-        <a class="btn-outline-success" id="userId" href="@Url.Action("Create", "Conversation", new { id = user.Id })">@user.UserName</a>
-    </div>
+
+    <a class="btn-outline-success" id="userId" href="@Url.Action("Create", "Conversation", new { id = user.Id })">@user.UserName</a>
+
 }
+</div>
