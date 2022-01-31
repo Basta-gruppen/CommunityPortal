@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
 using CommunityPortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CommunityPortal.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     public class GroupController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -121,9 +123,7 @@ namespace CommunityPortal.Controllers
 
             if (group != null)
             {
-                string currentUserId = _userManager.GetUserId(this.User);
-            
-                if (group.OwnerId == currentUserId)
+                if (IsUserGroupOwner(_userManager.GetUserId(this.User), group))
                 {
                     _context.Groups.Remove(group);
 
@@ -147,9 +147,106 @@ namespace CommunityPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddMember(string id)
+        public IActionResult AddMember(string groupId, string userId)
         {
-            return NotFound();
+            Group group = _context.Groups.Find(groupId);
+
+            if (group == null)
+                return BadRequest("Group not found, id submitted: " + groupId);
+
+            if (IsUserGroupOwner(_userManager.GetUserId(this.User), group))
+            {
+                _context.UserGroups.Add(new UserGroup()
+                {
+                    UserId = userId,
+                    GroupId = groupId
+                });
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Details), new {id = groupId});
+            }
+
+            return Unauthorized();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult KickMember(string groupId, string userId)
+        {
+            Group group = _context.Groups.Find(groupId);
+
+            if (group == null)
+                return BadRequest("Group not found, id submitted: " + groupId);
+
+            if (IsUserGroupOwner(userId, group) && group.OwnerId != userId)
+            {
+                UserGroup userGroup = _context.UserGroups.First(ug => ug.GroupId == groupId && ug.UserId == userId);
+                _context.UserGroups.Remove(userGroup);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Details), new {id = groupId});
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult LeaveGroup(string groupId)
+        {
+            if (!_context.Groups.Any(g => g.Id == groupId))
+                return BadRequest("Group not found, id submitted: " + groupId);
+
+            string currentUserId = _userManager.GetUserId(this.User);
+            
+            if (IsUserGroupMember(currentUserId, groupId, _context.UserGroups))
+            {
+                UserGroup userGroup = _context.UserGroups.First(ug => ug.GroupId == groupId && ug.UserId == currentUserId);
+                _context.UserGroups.Remove(userGroup);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    return BadRequest(e.Message);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return Unauthorized();
+        }
+
+        public static bool IsUserGroupMember(string userId, string groupId, IEnumerable<UserGroup> userGroups)
+        {
+            bool isMember = userGroups
+                .Where(ug => ug.GroupId == groupId)
+                .Any(ug => ug.UserId == userId);
+
+            return isMember;
+        }
+
+        public static bool IsUserGroupOwner(string userId, Group group)
+        {
+            return group.OwnerId == userId;
         }
     }
 }

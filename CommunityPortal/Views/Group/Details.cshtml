@@ -5,6 +5,27 @@
     Layout = "_Layout";
 }
 
+@section Scripts
+{
+    <script src="~/js/autocomplete.js"></script>
+    <script>
+        const field = document.getElementById("userSearch");
+        const autocomplete = new Autocomplete(field, {
+                data: [{label: "Loading...", value: ""}],
+                maximumItems: 10,
+                threshold: 1,
+                onSelectItem: ({label, value}) => {
+                    $("#userId").val(value);
+                    $("#AddMemberButton").prop("disabled", false);
+                }
+            });
+        
+        $.get("/User/GetNonMembers/", {groupId: "@Model.Group.Id"}, function (data){
+            autocomplete.setData(data);
+        });
+    </script>
+}
+
 <h2>@Model.Group.Name</h2>
 <small>Owner: @Model.Owner.UserName</small>
 <div class="d-flex flex-column align-items-center">
@@ -13,7 +34,21 @@
         @{
             foreach (var member in Model.Members)
             {
-                <p class="border rounded-2 border-light m-0 me-2 p-3">@member.UserName</p>
+                <div class="d-inline-flex border rounded-2 border-light me-2 p-3">
+                    <p class="m-0 me-2">@member.UserName</p>
+                    @{
+                        if (Model.IsOwner && member.Id != Model.Group.OwnerId)
+                        {
+                            <form method="post" action="@Url.Action("KickMember", "Group")">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" value="@Model.Group.Id" name="groupId"/>
+                                <input type="hidden" value="@member.Id" name="userId"/>
+                                <button type="submit" class="btn btn-danger btn-sm">Kick</button>
+                            </form>
+                        }
+                    }
+                </div>
+                
             }
         }
     </div>
@@ -21,11 +56,35 @@
     @{
         if (Model.IsOwner)
         {
+            <div class="d-inline-flex mb-5">
+                <form class="d-inline-flex flex-row" method="post" action="@Url.Action("AddMember", "Group")" autocomplete="off">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" value="@Model.Group.Id" name="groupId"/>
+                    <input type="hidden" value="" id="userId" name="userId" required="required"/>
+                    <div class="me-2">
+                        <label for="userSearch">Add Member</label>
+                        <input id="userSearch" type="text" class="form-control"/>
+                    </div>
+                    <div class="d-flex align-items-end">
+                        <button id="AddMemberButton" type="submit" class="btn btn-primary" disabled="disabled">Add</button>
+                    </div>
+                </form>
+            </div>
             <div class="d-inline-flex">
                 <form method="post" action="@Url.Action("Delete", "Group")">
                     @Html.AntiForgeryToken()
                     <input type="hidden" value="@Model.Group.Id" name="id"/>
                     <button type="submit" class="btn btn-danger">Delete @Model.Group.Name Group</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="d-inline-flex">
+                <form method="post" action="@Url.Action("LeaveGroup", "Group")">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" value="@Model.Group.Id" name="groupId"/>
+                    <button type="submit" class="btn btn-danger">Leave @Model.Group.Name</button>
                 </form>
             </div>
         }

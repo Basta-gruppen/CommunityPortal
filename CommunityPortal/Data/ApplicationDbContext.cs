@@ -372,21 +372,24 @@ namespace CommunityPortal.Data
                     Id = Guid.NewGuid().ToString(),
                     ForumId = forums[0].Id,
                     Name = "C#",
-                    Description = "All programming related to the C# language and it's frameworks"
+                    Description = "All programming related to the C# language and it's frameworks",
+                    OwnerId = applicationUsers[0].Id
                 },
                 new SubForum()
                 {
                     Id = Guid.NewGuid().ToString(),
                     ForumId = forums[1].Id,
                     Name = "League of Legends",
-                    Description = "SubForum about the game League of Legends"
+                    Description = "SubForum about the game League of Legends",
+                    OwnerId = applicationUsers[0].Id
                 },
                 new SubForum()
                 {
                     Id = Guid.NewGuid().ToString(),
                     ForumId = forums[1].Id,
                     Name = "Minecraft",
-                    Description = "Everything about Minecraft"
+                    Description = "Everything about Minecraft",
+                    OwnerId = applicationUsers[0].Id
                 }
             };
             builder.Entity<SubForum>().HasData(subForums);
