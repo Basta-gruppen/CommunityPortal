@@ -20,7 +20,7 @@
         <div class="d-flex flex-row justify-content-between">
             <a class="border-success" href="@Url.Action("Index" ,"Message" ,new {id = conversation.Id })">@conversation.Subject</a>
 
-            <input class="btn-danger" type="button" value="X" onclick="location.href='@Url.Action("Delete" ,"Conversation" ,new {id = conversation.Id })'" />
+            <input class="btn-danger" type="button" value="&#10060" onclick="location.href='@Url.Action("Delete" ,"Conversation" ,new {id = conversation.Id })'" />
 
         </div>
     }

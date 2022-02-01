@@ -64,26 +64,11 @@ namespace CommunityPortal.Controllers
                 .ToList();
             
             return PartialView("_MessagePartial", allMessages);
-            //return View();
-            //return RedirectToAction("MessageInConversation");
+            
         }
 
 
-        //public IActionResult MessageInConversation() { return View(); }
-        //[HttpPost]
-        public IActionResult MessageInConversation(string id) 
-        {
-            //List<Message> messages = dbContext.Messages
-            //    .Include(m => m.Conversation)
-            //    .ThenInclude(m => m.Messages)
-            //    .Where(m=>m.ConversationId==id).ToList();
-            Conversation conversation = dbContext.Conversations
-             .Include(m => m.Messages)
-             .ThenInclude(u => u.User)
-             .FirstOrDefault(c => c.Id == id);
-            return PartialView("_MessagePartialView", conversation);
-        }
-
+        
         public IActionResult Delete(string id)
         {
             var message = dbContext.Messages.Find(id);
