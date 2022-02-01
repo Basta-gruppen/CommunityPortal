@@ -315,7 +315,7 @@ namespace CommunityPortal.Data
                     CategoryId = categories[1].Id,
                     Subject = "So I made my first post today..",
                     Content = "Hey so I made my first post today, and this it! It's not much but it's something.",
-                    Timestamp = DateTime.Now.AddDays(1).AddHours(13)
+                    Timestamp = DateTime.Now
                 }
             };
             builder.Entity<Post>().HasData(posts);
