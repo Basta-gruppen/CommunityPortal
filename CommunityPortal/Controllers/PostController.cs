@@ -45,7 +45,7 @@ namespace CommunityPortal.Controllers
             }
             
             // page the list
-            var pageSize = 5;
+            var pageSize = 2;
             var listPaged = listUnpaged.ToPagedList(page ?? 1, pageSize);
 
             if (!listPaged.Any())
