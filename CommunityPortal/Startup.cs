@@ -47,10 +47,6 @@ namespace CommunityPortal
             });
             services.AddScoped<PostRepository, PostRepository>();
             services.AddScoped<CategoryRepository, CategoryRepository>();
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
-                .AddDefaultUI();
             services.AddControllersWithViews();
             services.AddRazorPages();
             
