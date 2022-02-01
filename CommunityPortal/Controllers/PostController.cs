@@ -34,7 +34,10 @@ namespace CommunityPortal.Controllers
                 return null;
 
             // retrieve list from database/whereverand
-            var listUnpaged = _postRepository.ToList();
+            //var listUnpaged = _postRepository.ToList();
+
+            var e = _context.Events.Select(e => (Post) e);
+            var listUnpaged = _postRepository.ToList().Union(e);
 
             if (!listUnpaged.Any())
             {
