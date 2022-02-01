@@ -39,8 +39,8 @@ namespace CommunityPortal.Repositories
                     .Include(post => post.Category)
                     .Include(post => post.User)
                     .Include(post => post.PostTags)
-                    .ThenInclude(postTag => postTag.Tag);
-                    
+                    .ThenInclude(postTag => postTag.Tag)
+                    .OrderByDescending(post => post.Timestamp);
 
             return this;
         }

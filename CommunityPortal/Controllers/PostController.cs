@@ -37,7 +37,7 @@ namespace CommunityPortal.Controllers
             //var listUnpaged = _postRepository.ToList();
 
             var e = _context.Events.Select(e => (Post) e);
-            var listUnpaged = _postRepository.ToList().Union(e);
+            var listUnpaged = _postRepository.GetAll().ToList().Union(e);
 
             if (!listUnpaged.Any())
             {
