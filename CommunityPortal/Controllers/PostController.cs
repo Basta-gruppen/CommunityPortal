@@ -34,7 +34,10 @@ namespace CommunityPortal.Controllers
                 return null;
 
             // retrieve list from database/whereverand
-            var listUnpaged = _postRepository.ToList();
+            //var listUnpaged = _postRepository.ToList();
+
+            var e = _context.Events.Select(e => (Post) e);
+            var listUnpaged = _postRepository.GetAll().ToList().Union(e);
 
             if (!listUnpaged.Any())
             {
@@ -42,7 +45,7 @@ namespace CommunityPortal.Controllers
             }
             
             // page the list
-            var pageSize = 5;
+            var pageSize = 2;
             var listPaged = listUnpaged.ToPagedList(page ?? 1, pageSize);
 
             if (!listPaged.Any())

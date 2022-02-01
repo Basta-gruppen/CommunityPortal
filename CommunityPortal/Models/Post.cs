@@ -23,9 +23,6 @@ namespace CommunityPortal.Models
         public string Content { get; set; }
         [Required]
         public DateTime Timestamp { get; set; }
-        
-     
-
 
         public Category Category { get; set; }
         public ApplicationUser User { get; set; }
@@ -40,7 +37,10 @@ namespace CommunityPortal.Models
                 CategoryId = "0",
                 Subject = @event.Subject,
                 Content = @event.Content,
-                Timestamp = @event.Timestamp
+                Timestamp = @event.Timestamp,
+                Category = null,
+                User = @event.User,
+                PostTags = new List<PostTag>()
             };
         }
     }

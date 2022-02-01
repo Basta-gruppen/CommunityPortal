@@ -26,14 +26,23 @@
 </a>
 <div class="row">
     <div class="col-lg-8">
-        @foreach (var post in Model)
+        @foreach (Post post in Model)
         {
+            var isEvent = post.CategoryId == "0";
             <div class="card mb-4">
-
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="true">Post</a>
+                            <a class="nav-link active" aria-current="true">
+                                @if (isEvent)
+                                {
+                                    <span>Event</span>
+                                }
+                                else
+                                {
+                                    <span>Post</span>
+                                }
+                            </a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -81,14 +90,26 @@
                 </div>
                 <div class="card-footer small text-muted">
                     Posted @post.Timestamp.ToString("yyyy-MM-dd HH:mm") by @post.User
-                    in
-                    <a
-                        class="text-decoration-none"
-                        asp-controller="Post"
-                        asp-action="Category"
-                        asp-route-category="@post.Category.Name">
-                        @post.Category.Name
-                    </a>
+                    <span>in</span>
+                    @if(post.Category != null) 
+                    {
+                        <a
+                            class="text-decoration-none"
+                            asp-controller="Post"
+                            asp-action="Category"
+                            asp-route-category="@post.Category?.Name">
+                            @post.Category?.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <a
+                            class="text-decoration-none"
+                            asp-controller="Event"
+                            asp-action="Index">
+                            Event
+                        </a>
+                    }
                 </div>
             </div>
         }

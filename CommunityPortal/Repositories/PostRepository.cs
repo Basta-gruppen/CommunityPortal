@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using CommunityPortal.Controllers;
 using CommunityPortal.Data;
 using CommunityPortal.Factories;
 using CommunityPortal.Models;
@@ -33,19 +34,14 @@ namespace CommunityPortal.Repositories
 
         public PostRepository GetAll()
         {
-            var items = 
-                _context.Posts.Select(x => (Post)x)
-                    .Concat(_context.Events.Select(x => (Post)x))
-                    .OrderBy(x => x.Timestamp);
-            
-            _posts = _context
-                .Posts
-                .Concat(_context.Events.Select(x => (Post)x))
-                .Include(post => post.Category)
-                .Include(post => post.User)
-                .Include(post => post.PostTags)
-                .ThenInclude(postTag => postTag.Tag)
-                .OrderByDescending(x => x.Timestamp);
+            _posts =
+                _context.Posts
+                    .Include(post => post.Category)
+                    .Include(post => post.User)
+                    .Include(post => post.PostTags)
+                    .ThenInclude(postTag => postTag.Tag)
+                    .OrderByDescending(post => post.Timestamp);
+
             return this;
         }
 
