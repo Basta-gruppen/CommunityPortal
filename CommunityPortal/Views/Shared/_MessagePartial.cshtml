@@ -4,9 +4,6 @@
     <script src="~/js/Message.js"></script>
 }
 
-<div>
-    <a asp-controller="Conversation" asp-action="Index">Back</a>
-</div>
 
 
 @{
@@ -23,7 +20,7 @@
                 @message.TimeStamp
             </div>
             <div class="col-md-3">
-                <input class="btn-danger" type="button" value="x" onclick="location.href = '@Url.Action("Delete","Message",new { id = message.Id })'" />
+                <input class="btn-danger" type="button" value="&#10060" onclick="location.href = '@Url.Action("Delete","Message",new { id = message.Id })'" />
             </div>
 
         </div>

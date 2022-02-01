@@ -40,8 +40,38 @@ namespace CommunityPortal.Data
         {
             base.OnModelCreating(builder);
 
+            string roleId = Guid.NewGuid().ToString();
+            string userId = Guid.NewGuid().ToString();
+
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = roleId,
+                Name = "Admin",
+                NormalizedName = "ADMIN"
+
+            });
+
+            PasswordHasher<ApplicationUser> hasher = new PasswordHasher<ApplicationUser>();
+
+            builder.Entity<ApplicationUser>().HasData(new ApplicationUser
+            {
+                Id = userId,
+                Email = "admin@admin.com",
+                NormalizedEmail = "ADMIN@ADMIN.COM",
+                UserName = "Admin",
+                NormalizedUserName = "ADMIN",
+                PasswordHash = hasher.HashPassword(null, "password"),
+
+            });
+
+            builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = roleId,
+                UserId = userId
+            });
+
             #region Relations
-            
+
             builder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
             builder.Entity<UserGroup>()
                 .HasOne(ug => ug.User)

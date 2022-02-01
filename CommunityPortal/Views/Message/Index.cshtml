@@ -1,60 +1,63 @@
 ﻿@*@model IEnumerable<CommunityPortal.Models.Message>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-
-
-
-@foreach (var item in Model)
-{
-
-    <div class="row">
-        <div class="col-md-3">
-            @item.Content
-        </div>
-        <div class="col-md-3">
-            @item.User.UserName
-        </div>
-        <div class="col-md-3">
-            @item.TimeStamp
-        </div>
-        <div class="col-md-3">
-            <input class="btn-danger" type="button" value="x" onclick="location.href = '@Url.Action("Delete","Message",new { id = item.Id })'" />
-        </div>
-
-
-
-    </div>
-
-    <Div>
-
-        @Html.ActionLink("create", "Create", new { id = item.ConversationId }) |
-         @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-         @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-    </Div>
-
-}*@
-@model Conversation
     @{
         ViewData["Title"] = "Index";
     }
-    @section scripts
+
+
+
+
+    @foreach (var item in Model)
     {
-        <script src="~/js/Message.js"></script>
-    }
-<div class="d-md-flex"></div>
+
+        <div class="row">
+            <div class="col-md-3">
+                @item.Content
+            </div>
+            <div class="col-md-3">
+                @item.User.UserName
+            </div>
+            <div class="col-md-3">
+                @item.TimeStamp
+            </div>
+            <div class="col-md-3">
+                <input class="btn-danger" type="button" value="x" onclick="location.href = '@Url.Action("Delete","Message",new { id = item.Id })'" />
+            </div>
+
+
+
+        </div>
+
+        <Div>
+
+            @Html.ActionLink("create", "Create", new { id = item.ConversationId }) |
+             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </Div>
+
+    }*@
+@model Conversation
+@{
+    ViewData["Title"] = "Index";
+}
+@section scripts
+    {
+    <script src="~/js/Message.js"></script>
+}
+
 <div class="card align-content-center border border-2" id="getMessage">
     <partial name="_MessagePartial" model="@Model.Messages" />
 </div>
 
- <div class="card-footer">
-        @*<form id="AjaxForm">*@
-        <input id="message" name="id" value="@Model.Id" hidden />
-        <input id="content" name="username" placeholder="type" type="text"/>
-        <input type="submit" id="sendmessage" class="btn-outline-success text-center" value="Send" onclick="SendMessage()" />
+<div class="card-footer">
+    @*<form id="AjaxForm">*@
+    <input id="message" name="id" value="@Model.Id" hidden />
+    <input id="content" name="username" placeholder="type" type="text" />
+    <input type="submit" id="sendmessage" class="btn-outline-success text-center" value=" &#10147;" onclick="SendMessage()" />
+    
+    @*</form>*@
+</div>
 
-        @*</form>*@
-  </div>
-
+<div>
+    <a class="accordion-button" asp-controller="Conversation" asp-action="Index">Back</a>
+</div>

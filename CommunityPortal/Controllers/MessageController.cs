@@ -86,10 +86,10 @@ namespace CommunityPortal.Controllers
 
         public IActionResult Delete(string id)
         {
-
-            dbContext.Messages.Remove(dbContext.Messages.Find(id));
+            var message = dbContext.Messages.Find(id);
+            dbContext.Messages.Remove(message);
             dbContext.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index),new { id = message.ConversationId });
            
         }
 
