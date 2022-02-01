@@ -42,12 +42,21 @@ namespace CommunityPortal.Data
 
             string roleId = Guid.NewGuid().ToString();
             string userId = Guid.NewGuid().ToString();
+            string userRoleId = Guid.NewGuid().ToString();
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Id = roleId,
                 Name = "Admin",
                 NormalizedName = "ADMIN"
+
+            });
+
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = userRoleId,
+                Name = "User",
+                NormalizedName = "USER"
 
             });
 
@@ -61,7 +70,7 @@ namespace CommunityPortal.Data
                 UserName = "Admin",
                 NormalizedUserName = "ADMIN",
                 PasswordHash = hasher.HashPassword(null, "password"),
-
+                ImageURL = "/images/default-profile.png"
             });
 
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>

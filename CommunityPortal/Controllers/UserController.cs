@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Web.Mvc;
 using CommunityPortal.Data;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using ContentResult = Microsoft.AspNetCore.Mvc.ContentResult;
+using Controller = Microsoft.AspNetCore.Mvc.Controller;
+using JsonResult = Microsoft.AspNetCore.Mvc.JsonResult;
 
 namespace CommunityPortal.Controllers
 {
-    [Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +24,21 @@ namespace CommunityPortal.Controllers
             _context = applicationDbContext;
         }
 
-        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet]
+        public IActionResult Details(string id)
+        {
+            
+            
+            
+            return View();
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult GetNonMembers(string groupId)
         {
             List<ApplicationUser> members = _context.UserGroups

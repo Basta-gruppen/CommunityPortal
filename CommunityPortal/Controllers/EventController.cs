@@ -24,17 +24,8 @@ namespace CommunityPortal.Controllers
         }
         public IActionResult Index()
         {
-            List<Event> ListOfPeople = _context.Events.OrderByDescending(e => e.Timestamp).ToList();
+            List<Event> ListOfPeople = _context.Events.Include(u => u.User).OrderByDescending(e => e.Timestamp).ToList();
             return View(ListOfPeople);
-            //return View(
-            //    _context
-            //        .Events
-            //        .Include(ev => ev.Subject)
-            //        .Include(ev => ev.Content)
-            //        .Include(ev => ev.StartDate)
-            //        .Include(ev => ev.User)
-            //        .Include(ev => ev.Timestamp)
-            //        .ToList());
         }
         public IActionResult CreateEvent()
         {
@@ -43,6 +34,7 @@ namespace CommunityPortal.Controllers
         [HttpPost]
         public IActionResult CreateEvent(Event ev)
         {
+            ev.Timestamp = DateTime.Now;
             ev.UserId = _userManager.GetUserId(User);
            ev.Id = Guid.NewGuid().ToString();
           // ev.UserId = HttpContext.User.Identity.Ge 
@@ -51,17 +43,10 @@ namespace CommunityPortal.Controllers
     .Where(x => x.Value.Errors.Count > 0)
     .Select(x => new { x.Key, x.Value.Errors })
     .ToArray();
-            //if (ModelState.IsValid)
-            //{
                 _context.Events.Add(ev);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
-            //}
-            //else
-            //{
-                //return View();
-            //}
-
+            
         }
 
         public IActionResult EditEvent(String eventId)
@@ -85,6 +70,7 @@ namespace CommunityPortal.Controllers
                 eventData.Subject = ev.Subject;
                 eventData.Content = ev.Content;
                 eventData.StartDate = ev.StartDate;
+                eventData.Timestamp = DateTime.Now;
                 _context.Entry(eventData).State = EntityState.Modified;
                 _context.SaveChanges();
             }
@@ -104,74 +90,7 @@ namespace CommunityPortal.Controllers
             }
             return RedirectToAction("Index");
         }
-        /*
-         public IActionResult DeletePerson(int personId)
-        {
-            if (personId > 0)
-            {
-                var personbyId = _context.People.Where(x => x.PersonId == personId).FirstOrDefault();
-                if (personbyId != null)
-                {
-                    _context.Entry(personbyId).State = EntityState.Deleted;
-                    _context.SaveChanges();
-                }
-            }
-            return RedirectToAction("People");
-        }
-         */
 
-        /*
-         public class CustomerOrderDetailsController : Controller
-
-{
-
-[AcceptVerbs(HttpVerbs.Get)]
-
-public ActionResult Index()
-
-{
-
-OrderDBEntities orderdb = new OrderDBEntities(); //dbcontect class
-
-List<CustomerVM> CustomerVMlist = new List<CustomerVM>(); // to hold list of Customer and order details
-
-var customerlist = (from Cust in orderdb.Customers
-
-join Ord in orderdb.Orders on Cust.CustomerID equals Ord.CustomerID
-
-selectnew { Cust.Name, Cust.Mobileno, Cust.Address, Ord.OrderDate, Ord.OrderPrice}).ToList();
-
-//query getting data from database from joining two tables and storing data in customerlist
-
-foreach (var item in customerlist)
-
-{
-
-CustomerVM objcvm = new CustomerVM(); // ViewModel
-
-objcvm.Name = item.Name;
-
-objcvm.Mobileno = item.Mobileno;
-
-objcvm.Address = item.Address;
-
-objcvm.OrderDate = item.OrderDate;
-
-objcvm.OrderPrice = item.OrderPrice;
-
-CustomerVMlist.Add(objcvm);
-
-}
-
-//Using foreach loop fill data from custmerlist to List<CustomerVM>.
-
-return View(CustomerVMlist); //List of CustomerVM (ViewModel)
-
-}
-
-}
-         
-         */
 
 
     }

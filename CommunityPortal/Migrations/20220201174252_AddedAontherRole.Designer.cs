@@ -3,14 +3,16 @@ using System;
 using CommunityPortal.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CommunityPortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220201174252_AddedAontherRole")]
+    partial class AddedAontherRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,52 +88,51 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9d2c7bd9-8d2b-45a5-9e1e-87392d0858bc",
+                            Id = "7d480373-51c9-4460-b92e-b586663313f9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8af89bc0-34c5-4b1f-a5cb-4dd25bc8e85e",
+                            ConcurrencyStamp = "9de54a28-1589-4ac0-8b30-eb690f1e8896",
                             Email = "admin@admin.com",
                             EmailConfirmed = false,
-                            ImageURL = "/images/default-profile.png",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGNxbygzYcLLDFF0SipVDyt7kVA2s7jVYlGq0lN/I5PDlrMZYYnwjcAv/XvsNgc1kw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMvY+tUE6IBQsdybvXcYDPMRcHDzPOjCQOpbZOtDPpIUlFcEotbMUXQoKu8+llHFLw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9fcab429-8e2c-460e-ae66-87c3d2cda96c",
+                            SecurityStamp = "2ab28ec0-c2a4-4143-bf00-3521de95804a",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
                         new
                         {
-                            Id = "e333f603-29f0-4ce7-8dd3-ff89508cef36",
+                            Id = "384dba04-c496-4295-9349-c0b2cd1999e7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8c972e6-7ddb-4cf6-bfe5-ba7860d7bb22",
+                            ConcurrencyStamp = "a424bcd2-1f2d-478e-b670-0fd91a0bf1cb",
                             Email = "seeduser@gmail.com",
                             EmailConfirmed = false,
                             ImageURL = "https://i.pravatar.cc/100?img=2",
                             LockoutEnabled = false,
                             NormalizedEmail = "SEEDUSER@GMAIL.COM",
                             NormalizedUserName = "SEEDUSER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEICCG+x9O7Bxsw1Ujuaxo50snsQHLIq8wweP9XvJbGJR2YXuMorKmQZAwKwA3kaa6w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPA1BAIHYZe9U3i3bntt6+xWuvMvS45OmKtaYJMlVfNe4tIncKcTNwfGd45JRNccgA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ac12274d-b03b-4dab-9304-f50b6f18f25b",
+                            SecurityStamp = "98bba1ba-b559-4672-9798-58be9f514be2",
                             TwoFactorEnabled = false,
                             UserName = "SeedUser"
                         },
                         new
                         {
-                            Id = "927b42b1-635f-46c7-af29-eab7a78f8822",
+                            Id = "5633e885-95e2-4644-aeb4-f745ffdbde11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e2072105-11e4-4844-a07e-df18c78e5ecf",
+                            ConcurrencyStamp = "72d04d32-9418-4d42-8c64-aab40ee876ca",
                             Email = "seeduser2@gmail.com",
                             EmailConfirmed = false,
                             ImageURL = "https://i.pravatar.cc/100?img=4",
                             LockoutEnabled = false,
                             NormalizedEmail = "SEEDUSER2@GMAIL.COM",
                             NormalizedUserName = "SEEDUSER2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDIpVNODC7KnICfIkaKdEIZt3gT/D2E2qcg9aF/3dDSBQFSpCgkz4q/OHqjQ1yu1vA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBKZU/VzMrn8dKm0VQ3m8t3GjDPFYLgq3sKKhMnF6zO7vW2pOEgOXfa1hyy+Cz0m5Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0eec2c9f-01f6-4204-a205-8dd74ebc589e",
+                            SecurityStamp = "b35a4450-e0f9-40a9-9d6b-8ac894fdfb98",
                             TwoFactorEnabled = false,
                             UserName = "SeedUser2"
                         });
@@ -154,12 +155,12 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b22003a5-25f0-408c-ac40-bbf13e9322b4",
+                            Id = "bb334afe-83d4-4581-94df-2d0525538aae",
                             Name = "Gaming"
                         },
                         new
                         {
-                            Id = "aa8ddfad-98f4-4c57-b630-474c7ba9514e",
+                            Id = "6f6f4edd-ffa4-4162-8d60-f691f543f525",
                             Name = "Health & Safety"
                         });
                 });
@@ -181,18 +182,18 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = "b22003a5-25f0-408c-ac40-bbf13e9322b4",
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            CategoryId = "bb334afe-83d4-4581-94df-2d0525538aae",
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            CategoryId = "aa8ddfad-98f4-4c57-b630-474c7ba9514e",
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            CategoryId = "6f6f4edd-ffa4-4162-8d60-f691f543f525",
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            CategoryId = "aa8ddfad-98f4-4c57-b630-474c7ba9514e",
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            CategoryId = "6f6f4edd-ffa4-4162-8d60-f691f543f525",
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -213,7 +214,7 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "83c60eda-b7c8-478a-88f4-d790842daf84",
+                            Id = "3eb24adf-a022-42f2-92b4-346b3ca06331",
                             Subject = "A cool conversation between seeded users"
                         });
                 });
@@ -251,21 +252,21 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f171a852-bd7a-4f79-9a60-5b61d5710d28",
+                            Id = "f745604d-b2d3-46cb-bb63-caa49e5c34e3",
                             Content = "We will be meeting in the town centre on the specified date.",
-                            StartDate = new DateTime(2022, 2, 4, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(952),
+                            StartDate = new DateTime(2022, 2, 4, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(1578),
                             Subject = "Meeting in town centre",
-                            Timestamp = new DateTime(2022, 2, 1, 20, 34, 22, 505, DateTimeKind.Local).AddTicks(7764),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            Timestamp = new DateTime(2022, 2, 1, 18, 42, 52, 96, DateTimeKind.Local).AddTicks(236),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "4e2e9201-c457-4d0e-a494-87d708e8c5cc",
+                            Id = "a768494f-6be7-439f-9b2b-2107b2591b37",
                             Content = "We will begin a riot on Walmart on the second street",
-                            StartDate = new DateTime(2022, 2, 11, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(1464),
+                            StartDate = new DateTime(2022, 2, 11, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(2030),
                             Subject = "Riot at Walmart",
-                            Timestamp = new DateTime(2022, 2, 1, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(1445),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            Timestamp = new DateTime(2022, 2, 1, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(2009),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -286,12 +287,12 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e400ac20-8f62-42a9-a150-e676bb21b60f",
+                            Id = "4d9152fa-3900-42b8-8d06-13513a1d1411",
                             Name = "Programming"
                         },
                         new
                         {
-                            Id = "d443af63-669a-463f-b7b7-7561b50dd76e",
+                            Id = "bacae451-46cf-4b55-9b90-33f40a7e9410",
                             Name = "Gaming"
                         });
                 });
@@ -319,21 +320,21 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "81bfe845-ebc9-4ca5-9e56-98652694aca3",
+                            Id = "0d076863-405d-4f02-9952-b728e5888254",
                             Name = "Gamers",
-                            OwnerId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            OwnerId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "c36b9b16-77b9-40b9-87d8-77c7d1a2d8fb",
+                            Id = "2376472b-45bd-45f6-9e4f-ba9d731c9e97",
                             Name = "Programmers",
-                            OwnerId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            OwnerId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "6d2af965-c19e-4165-834f-5b969c62c51f",
+                            Id = "a1004d2f-1214-47a1-b149-8e0ecf210446",
                             Name = "General",
-                            OwnerId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            OwnerId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         });
                 });
 
@@ -368,19 +369,19 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9b09c258-3c8b-4fcb-9f68-73c2ecec2f15",
+                            Id = "35d88bd8-bd5b-41ef-98e5-64dc36d9e82c",
                             Content = "Hello my dear friend, how are you doing?",
-                            ConversationId = "83c60eda-b7c8-478a-88f4-d790842daf84",
-                            TimeStamp = new DateTime(2022, 2, 1, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(6872),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            ConversationId = "3eb24adf-a022-42f2-92b4-346b3ca06331",
+                            TimeStamp = new DateTime(2022, 2, 1, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(6350),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "1750327f-5d7b-4754-839f-b875b9b7f6dd",
+                            Id = "3da8676b-af01-4821-b93d-baf9eab66dc8",
                             Content = "Hi! I'm doing great, thanks for asking!!",
-                            ConversationId = "83c60eda-b7c8-478a-88f4-d790842daf84",
-                            TimeStamp = new DateTime(2022, 2, 1, 23, 34, 22, 508, DateTimeKind.Local).AddTicks(7250),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ConversationId = "3eb24adf-a022-42f2-92b4-346b3ca06331",
+                            TimeStamp = new DateTime(2022, 2, 1, 21, 42, 52, 98, DateTimeKind.Local).AddTicks(6678),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -420,21 +421,21 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "de10d3d4-d5e6-4c6c-81d8-b3e8772b6613",
-                            CategoryId = "b22003a5-25f0-408c-ac40-bbf13e9322b4",
+                            Id = "423f7313-d83f-47ba-9ce0-29b69583742e",
+                            CategoryId = "bb334afe-83d4-4581-94df-2d0525538aae",
                             Content = "Thank you so much for reading my first post, it means a lot to me!",
                             Subject = "This is my first post (:",
-                            Timestamp = new DateTime(2022, 2, 1, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(9378),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            Timestamp = new DateTime(2022, 2, 1, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(8251),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "1161c54d-2c22-408e-8b60-9f967f76402a",
-                            CategoryId = "aa8ddfad-98f4-4c57-b630-474c7ba9514e",
+                            Id = "d02f67bf-35bf-4be7-9146-0891a4c2e3bb",
+                            CategoryId = "6f6f4edd-ffa4-4162-8d60-f691f543f525",
                             Content = "Hey so I made my first post today, and this it! It's not much but it's something.",
                             Subject = "So I made my first post today..",
-                            Timestamp = new DateTime(2022, 2, 1, 20, 34, 22, 508, DateTimeKind.Local).AddTicks(9784),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            Timestamp = new DateTime(2022, 2, 1, 18, 42, 52, 98, DateTimeKind.Local).AddTicks(8591),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -455,23 +456,23 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            PostId = "de10d3d4-d5e6-4c6c-81d8-b3e8772b6613",
-                            TagId = "4a646082-b17b-4d80-9f8d-cf79868c2c76"
+                            PostId = "423f7313-d83f-47ba-9ce0-29b69583742e",
+                            TagId = "2d4a304a-d4c9-4557-b8d6-ebae44a7f090"
                         },
                         new
                         {
-                            PostId = "de10d3d4-d5e6-4c6c-81d8-b3e8772b6613",
-                            TagId = "d1209528-7da5-428c-8107-7e04429843de"
+                            PostId = "423f7313-d83f-47ba-9ce0-29b69583742e",
+                            TagId = "0bea8d44-34a8-4cf6-a986-c71f62055ced"
                         },
                         new
                         {
-                            PostId = "1161c54d-2c22-408e-8b60-9f967f76402a",
-                            TagId = "4a646082-b17b-4d80-9f8d-cf79868c2c76"
+                            PostId = "d02f67bf-35bf-4be7-9146-0891a4c2e3bb",
+                            TagId = "2d4a304a-d4c9-4557-b8d6-ebae44a7f090"
                         },
                         new
                         {
-                            PostId = "1161c54d-2c22-408e-8b60-9f967f76402a",
-                            TagId = "822ef3e4-86bf-48df-b041-ca69b7f715dc"
+                            PostId = "d02f67bf-35bf-4be7-9146-0891a4c2e3bb",
+                            TagId = "9c000d20-6b61-499b-8d9f-211ebda4a45d"
                         });
                 });
 
@@ -511,59 +512,59 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bb3dc884-36ae-40f9-aa34-458d383bbf73",
+                            Id = "4775103d-66cc-4a1a-a413-d4ed6139d4f8",
                             Content = "I've been trying really long to figure how to print text but I just get errors plz help",
-                            ThreadId = "25d3e7bf-a4c1-4eff-bb65-02da8ba55688",
-                            TimeStamp = new DateTime(2022, 2, 1, 20, 34, 22, 510, DateTimeKind.Local).AddTicks(935),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            ThreadId = "26ff131d-8aa9-4407-9a56-27f2a60e1519",
+                            TimeStamp = new DateTime(2022, 2, 1, 18, 42, 52, 99, DateTimeKind.Local).AddTicks(7509),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "a6b982f0-bb58-4299-9089-f04994bf417e",
+                            Id = "19cc3150-a271-42af-a676-18defbaa8e41",
                             Content = "Use google.",
-                            ThreadId = "25d3e7bf-a4c1-4eff-bb65-02da8ba55688",
-                            TimeStamp = new DateTime(2022, 2, 2, 1, 34, 22, 510, DateTimeKind.Local).AddTicks(1306),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ThreadId = "26ff131d-8aa9-4407-9a56-27f2a60e1519",
+                            TimeStamp = new DateTime(2022, 2, 1, 23, 42, 52, 99, DateTimeKind.Local).AddTicks(7826),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "070f69ba-a818-4516-a7c3-08e3fe9e4d82",
+                            Id = "8710ab85-ef32-4d61-a05e-21a8c2ca0d9e",
                             Content = "This is the most toxic game ever, everybody is just flaming. I QUIT!!!",
-                            ThreadId = "7dd3645f-ee52-45b8-9f2d-69dd23146485",
-                            TimeStamp = new DateTime(2022, 2, 1, 20, 34, 22, 510, DateTimeKind.Local).AddTicks(1327),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ThreadId = "599e309a-9658-42cf-b588-6d84bf2d78f4",
+                            TimeStamp = new DateTime(2022, 2, 1, 18, 42, 52, 99, DateTimeKind.Local).AddTicks(7847),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "f24830a4-8839-41fd-89c4-58118ebf64e8",
+                            Id = "dee605a7-1b25-4e72-b231-df1aea1743c9",
                             Content = "lol noob",
-                            ThreadId = "7dd3645f-ee52-45b8-9f2d-69dd23146485",
-                            TimeStamp = new DateTime(2022, 2, 2, 0, 34, 22, 510, DateTimeKind.Local).AddTicks(1334),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            ThreadId = "599e309a-9658-42cf-b588-6d84bf2d78f4",
+                            TimeStamp = new DateTime(2022, 2, 1, 22, 42, 52, 99, DateTimeKind.Local).AddTicks(7854),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "f51301f0-38e0-4651-b030-e4558c0b7db1",
+                            Id = "939dfaa4-c421-4d44-8eec-b4dcbf709807",
                             Content = "COME 1V1 ME",
-                            ThreadId = "7dd3645f-ee52-45b8-9f2d-69dd23146485",
-                            TimeStamp = new DateTime(2022, 2, 2, 2, 34, 22, 510, DateTimeKind.Local).AddTicks(1341),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ThreadId = "599e309a-9658-42cf-b588-6d84bf2d78f4",
+                            TimeStamp = new DateTime(2022, 2, 2, 0, 42, 52, 99, DateTimeKind.Local).AddTicks(7860),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "977fda74-3551-4d3b-92a7-23f257ae5f07",
+                            Id = "6099dce2-0c37-4214-91c8-5ea18574b38b",
                             Content = "I can't find diamonds anywhere, it's really hard :(",
-                            ThreadId = "a3e03e3e-62d1-4134-ac90-4d637e441a30",
-                            TimeStamp = new DateTime(2022, 2, 1, 20, 34, 22, 510, DateTimeKind.Local).AddTicks(1357),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ThreadId = "b26ae145-c7ef-4337-9b3e-dbf8fbcef1e4",
+                            TimeStamp = new DateTime(2022, 2, 1, 18, 42, 52, 99, DateTimeKind.Local).AddTicks(7869),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "b53c59b5-b37c-463a-ae55-fa7f92383cfb",
+                            Id = "c2ab7ec2-e8c8-48ad-9f40-893d4f1b708c",
                             Content = "I thinks it's below y-level 12 try that! ((:",
-                            ThreadId = "a3e03e3e-62d1-4134-ac90-4d637e441a30",
-                            TimeStamp = new DateTime(2022, 2, 1, 22, 34, 22, 510, DateTimeKind.Local).AddTicks(1364),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            ThreadId = "b26ae145-c7ef-4337-9b3e-dbf8fbcef1e4",
+                            TimeStamp = new DateTime(2022, 2, 1, 20, 42, 52, 99, DateTimeKind.Local).AddTicks(7874),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -598,27 +599,27 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "68d442d8-08f9-4c89-89ae-700db063f058",
+                            Id = "33bd95b2-946c-43ee-b34d-e587c40ebd83",
                             Description = "All programming related to the C# language and it's frameworks",
-                            ForumId = "e400ac20-8f62-42a9-a150-e676bb21b60f",
+                            ForumId = "4d9152fa-3900-42b8-8d06-13513a1d1411",
                             Name = "C#",
-                            OwnerId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            OwnerId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "60186196-f38e-4528-8983-9f2e9c3713fb",
+                            Id = "8b4cca06-3b23-453d-90b7-b375e8d905d0",
                             Description = "SubForum about the game League of Legends",
-                            ForumId = "d443af63-669a-463f-b7b7-7561b50dd76e",
+                            ForumId = "bacae451-46cf-4b55-9b90-33f40a7e9410",
                             Name = "League of Legends",
-                            OwnerId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            OwnerId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "cb73d2d1-d032-49cf-885b-a163f69e655e",
+                            Id = "e475f2d3-bb56-4b02-bd76-06d7eb15986f",
                             Description = "Everything about Minecraft",
-                            ForumId = "d443af63-669a-463f-b7b7-7561b50dd76e",
+                            ForumId = "bacae451-46cf-4b55-9b90-33f40a7e9410",
                             Name = "Minecraft",
-                            OwnerId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            OwnerId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         });
                 });
 
@@ -639,18 +640,18 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            GroupId = "81bfe845-ebc9-4ca5-9e56-98652694aca3",
-                            SubForumId = "60186196-f38e-4528-8983-9f2e9c3713fb"
+                            GroupId = "0d076863-405d-4f02-9952-b728e5888254",
+                            SubForumId = "8b4cca06-3b23-453d-90b7-b375e8d905d0"
                         },
                         new
                         {
-                            GroupId = "81bfe845-ebc9-4ca5-9e56-98652694aca3",
-                            SubForumId = "cb73d2d1-d032-49cf-885b-a163f69e655e"
+                            GroupId = "0d076863-405d-4f02-9952-b728e5888254",
+                            SubForumId = "e475f2d3-bb56-4b02-bd76-06d7eb15986f"
                         },
                         new
                         {
-                            GroupId = "c36b9b16-77b9-40b9-87d8-77c7d1a2d8fb",
-                            SubForumId = "68d442d8-08f9-4c89-89ae-700db063f058"
+                            GroupId = "2376472b-45bd-45f6-9e4f-ba9d731c9e97",
+                            SubForumId = "33bd95b2-946c-43ee-b34d-e587c40ebd83"
                         });
                 });
 
@@ -671,17 +672,17 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4a646082-b17b-4d80-9f8d-cf79868c2c76",
+                            Id = "2d4a304a-d4c9-4557-b8d6-ebae44a7f090",
                             Name = "First Post"
                         },
                         new
                         {
-                            Id = "d1209528-7da5-428c-8107-7e04429843de",
+                            Id = "0bea8d44-34a8-4cf6-a986-c71f62055ced",
                             Name = "Informative"
                         },
                         new
                         {
-                            Id = "822ef3e4-86bf-48df-b041-ca69b7f715dc",
+                            Id = "9c000d20-6b61-499b-8d9f-211ebda4a45d",
                             Name = "Casual"
                         });
                 });
@@ -718,27 +719,27 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "25d3e7bf-a4c1-4eff-bb65-02da8ba55688",
-                            SubForumId = "68d442d8-08f9-4c89-89ae-700db063f058",
+                            Id = "26ff131d-8aa9-4407-9a56-27f2a60e1519",
+                            SubForumId = "33bd95b2-946c-43ee-b34d-e587c40ebd83",
                             Subject = "How do I print text?",
-                            TimeStamp = new DateTime(2022, 2, 1, 20, 34, 22, 509, DateTimeKind.Local).AddTicks(8623),
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36"
+                            TimeStamp = new DateTime(2022, 2, 1, 18, 42, 52, 99, DateTimeKind.Local).AddTicks(5571),
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7"
                         },
                         new
                         {
-                            Id = "7dd3645f-ee52-45b8-9f2d-69dd23146485",
-                            SubForumId = "60186196-f38e-4528-8983-9f2e9c3713fb",
+                            Id = "599e309a-9658-42cf-b588-6d84bf2d78f4",
+                            SubForumId = "8b4cca06-3b23-453d-90b7-b375e8d905d0",
                             Subject = "Why League is the most toxic game",
-                            TimeStamp = new DateTime(2022, 2, 2, 20, 34, 22, 509, DateTimeKind.Local).AddTicks(9018),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            TimeStamp = new DateTime(2022, 2, 2, 18, 42, 52, 99, DateTimeKind.Local).AddTicks(5889),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         },
                         new
                         {
-                            Id = "a3e03e3e-62d1-4134-ac90-4d637e441a30",
-                            SubForumId = "cb73d2d1-d032-49cf-885b-a163f69e655e",
+                            Id = "b26ae145-c7ef-4337-9b3e-dbf8fbcef1e4",
+                            SubForumId = "e475f2d3-bb56-4b02-bd76-06d7eb15986f",
                             Subject = "Where to find diamonds?",
-                            TimeStamp = new DateTime(2022, 2, 2, 2, 34, 22, 509, DateTimeKind.Local).AddTicks(9040),
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822"
+                            TimeStamp = new DateTime(2022, 2, 2, 0, 42, 52, 99, DateTimeKind.Local).AddTicks(5914),
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11"
                         });
                 });
 
@@ -759,13 +760,13 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36",
-                            ConversationId = "83c60eda-b7c8-478a-88f4-d790842daf84"
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7",
+                            ConversationId = "3eb24adf-a022-42f2-92b4-346b3ca06331"
                         },
                         new
                         {
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822",
-                            ConversationId = "83c60eda-b7c8-478a-88f4-d790842daf84"
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11",
+                            ConversationId = "3eb24adf-a022-42f2-92b4-346b3ca06331"
                         });
                 });
 
@@ -786,23 +787,23 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36",
-                            GroupId = "81bfe845-ebc9-4ca5-9e56-98652694aca3"
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7",
+                            GroupId = "0d076863-405d-4f02-9952-b728e5888254"
                         },
                         new
                         {
-                            UserId = "e333f603-29f0-4ce7-8dd3-ff89508cef36",
-                            GroupId = "c36b9b16-77b9-40b9-87d8-77c7d1a2d8fb"
+                            UserId = "384dba04-c496-4295-9349-c0b2cd1999e7",
+                            GroupId = "2376472b-45bd-45f6-9e4f-ba9d731c9e97"
                         },
                         new
                         {
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822",
-                            GroupId = "81bfe845-ebc9-4ca5-9e56-98652694aca3"
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11",
+                            GroupId = "0d076863-405d-4f02-9952-b728e5888254"
                         },
                         new
                         {
-                            UserId = "927b42b1-635f-46c7-af29-eab7a78f8822",
-                            GroupId = "c36b9b16-77b9-40b9-87d8-77c7d1a2d8fb"
+                            UserId = "5633e885-95e2-4644-aeb4-f745ffdbde11",
+                            GroupId = "2376472b-45bd-45f6-9e4f-ba9d731c9e97"
                         });
                 });
 
@@ -834,15 +835,15 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9d39b344-1ff9-4a3c-b745-86e062bb0faf",
-                            ConcurrencyStamp = "287888dd-1cc0-42e8-863c-bc2507de5c1e",
+                            Id = "ec4f0751-2622-44cf-b65d-eb11d06bcabe",
+                            ConcurrencyStamp = "aca4dac8-c2d5-417b-8a4a-c5322e089d36",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f52267f1-7b3c-48da-915e-238bfda321d9",
-                            ConcurrencyStamp = "516660a2-f28d-486e-b7c0-fa29894acdf1",
+                            Id = "f1951b40-476c-4a7e-abec-2c66b0498ecd",
+                            ConcurrencyStamp = "647c6ae2-3e71-4867-99ca-531d68144fbc",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -933,8 +934,8 @@ namespace CommunityPortal.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "9d2c7bd9-8d2b-45a5-9e1e-87392d0858bc",
-                            RoleId = "9d39b344-1ff9-4a3c-b745-86e062bb0faf"
+                            UserId = "7d480373-51c9-4460-b92e-b586663313f9",
+                            RoleId = "ec4f0751-2622-44cf-b65d-eb11d06bcabe"
                         });
                 });
 
