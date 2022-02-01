@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using CommunityPortal.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,7 +11,8 @@ namespace CommunityPortal.ViewModels
         [Key] public string Id { get; set; }
 
         [Required] public string UserId { get; set; }
-
+        
+        [DisplayName("Category")]
         [Required] public string CategoryId { get; set; }
 
         public Category Category { get; set; }
@@ -24,6 +26,7 @@ namespace CommunityPortal.ViewModels
 
         public string[] SelectedTagIds { get; set; } = { };
 
+        [DisplayName("Tags")]
         public List<SelectListItem> TagList { get; set; } =
             new List<SelectListItem> {new SelectListItem("Tag", "", false)};
     }
