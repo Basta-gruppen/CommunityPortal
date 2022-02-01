@@ -4,7 +4,9 @@
     <form class="d-flex flex-column" method="post" action="@Url.Action("Create", "Reply")">
         @Html.AntiForgeryToken()
         <input hidden="" name="ThreadId" value="@Model"/>
-        <textarea class="form-control mb-2" name="Content" placeholder="New Reply"></textarea>
+        <input id="QuoteId" hidden="" name="QuoteId" value=""/>
+        <input id="QuoteContent" class="form-control mb-2" disabled placeholder="Press quote button on any reply to quote it here (Optional)" value=""/>
+        <textarea class="form-control mb-2" name="Content" placeholder="New Reply" required></textarea>
         <div class="d-flex flex-row-reverse">
             <button type="submit" class="btn btn-success">Post</button>
         </div>
