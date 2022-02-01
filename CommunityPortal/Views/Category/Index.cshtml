@@ -41,37 +41,18 @@
                     </td>
                     <td>@categoryViewModel.PostCount</td>
                     <td>
-                        <div class="btn-group" role="group">
-                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a 
-                                        class="dropdown-item"
-                                        asp-controller="Category"
-                                        asp-action="@subscribeState"
-                                        asp-route-id="@categoryViewModel.Id">
-                                        @subscribeState
-                                    </a>
-                                </li>
-                                <li><a 
-                                        class="dropdown-item"
-                                        asp-controller="Category"
-                                        asp-action="Edit"
-                                        asp-route-id="@categoryViewModel.Id">
-                                        Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <form
-                                        class="dropdown-item"
-                                        method="Post" action="@Url.Action("Delete", "Category")">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" value="@categoryViewModel.Id" name="id"/>
-                                        <button class="nav-link link-danger" type="submit">Remove</button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a
+                                class="btn btn-primary"
+                                asp-controller="Category"
+                                asp-action="Edit"
+                                asp-route-id="@categoryViewModel.Id">Edit</a>
+                            <form
+                                method="Post" action="@Url.Action("Delete", "Category")">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" value="@categoryViewModel.Id" name="id"/>
+                                <button class="btn btn-danger" type="submit">Remove</button>
+                            </form>
                         </div>
                     </td>
                 </tr>
