@@ -28,10 +28,10 @@ namespace CommunityPortal.Controllers
         {
             Thread thread = _context.Threads
                 .Include(t => t.User)
-                .Include(t => t.Replies)
-                .ThenInclude(r => r.User)
-                .Include(t => t.SubForum)
-                .ThenInclude(sf => sf.SubForumGroups)
+                .Include(t => t.Replies).ThenInclude(r => r.User)
+                .Include(t => t.Replies).ThenInclude(r => r.Quote)
+                .Include(t => t.SubForum).ThenInclude(sf => sf.SubForumGroups)
+                .Include(t => t.SubForum).ThenInclude(sf => sf.Forum)
                 .FirstOrDefault(t => t.Id == id);
 
             if (thread == null)

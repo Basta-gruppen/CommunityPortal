@@ -19,6 +19,9 @@ namespace CommunityPortal.Models
         [Required]
         public DateTime TimeStamp { get;set; }
 
+        public string QuoteId { get; set; }
+        public Reply Quote { get; set; }
+
         public ApplicationUser User { get; set; }
         public Thread Thread { get; set; }
 
