@@ -36,15 +36,25 @@ namespace CommunityPortal.Controllers
             // retrieve list from database/whereverand
             var listUnpaged = _postRepository.ToList();
 
+            if (!listUnpaged.Any())
+            {
+                return listUnpaged.ToPagedList(pageNumber:1, 1);
+            }
+            
             // page the list
-            const int pageSize = 1;
+            var pageSize = 1;
             var listPaged = listUnpaged.ToPagedList(page ?? 1, pageSize);
+
+            if (!listPaged.Any())
+            {
+                return listUnpaged.ToPagedList(pageNumber:1, 1);
+            }
 
             // return a 404 if user browses to pages beyond last page. special case first page if no items exist
             if (listPaged.PageNumber != 1 && page.HasValue && page > listPaged.PageCount)
                 return null;
 
-            return listPaged;
+            return !listPaged.Any() ? listUnpaged.ToPagedList(page ?? 1, 1) : listPaged;
         }
 
         private IActionResult ListPosts(int page)
@@ -53,9 +63,11 @@ namespace CommunityPortal.Controllers
             ViewBag.Categories = _categoryRepository
                 .GetAllAsViewModelList(_userManager.GetUserId(User))
                 .ToList();
+
+            var test = GetPagedPosts(page);
             return View(
                 "Index",
-                GetPagedPosts(page)
+                test
             );
         }
 
@@ -73,6 +85,16 @@ namespace CommunityPortal.Controllers
         [Route("/Posts/tag/{Tag}/{page:int?}")]
         public IActionResult Index(string tag, int page = 1)
         {
+            var posts = _postRepository
+                .GetAll()
+                .ByTag(tag)
+                .ToList();
+            if (!posts.Any())
+            {
+                return View(_postRepository
+                    .GetAll()
+                    .ByTag(tag));
+            }
             _postRepository
                 .GetAll()
                 .ByTag(tag);
@@ -86,6 +108,16 @@ namespace CommunityPortal.Controllers
             _postRepository
                 .GetAll()
                 .ByCategoryName(category);
+            return ListPosts(page);
+        }
+        
+        [HttpGet]
+        [Route("/Posts/Search")]
+        public IActionResult Search(string keyword, int page = 1)
+        {
+            _postRepository
+                .GetAll()
+                .ByKeyword(keyword);
             return ListPosts(page);
         }
 
