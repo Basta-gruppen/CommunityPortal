@@ -31,6 +31,7 @@ namespace CommunityPortal.Controllers
                 .Include(t => t.Replies).ThenInclude(r => r.User)
                 .Include(t => t.Replies).ThenInclude(r => r.Quote)
                 .Include(t => t.SubForum).ThenInclude(sf => sf.SubForumGroups)
+                .Include(t => t.SubForum).ThenInclude(sf => sf.Forum)
                 .FirstOrDefault(t => t.Id == id);
 
             if (thread == null)

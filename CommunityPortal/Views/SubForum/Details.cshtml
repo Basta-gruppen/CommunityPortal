@@ -10,7 +10,14 @@
     <script src="~/js/ToggleElement.js"></script>
 }
 
-<div class="d-flex flex-row justify-content-end mb-4">
+<div class="d-flex flex-row justify-content-between mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Forum")">Forums</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Details", "Forum", new {id=Model.SubForum.ForumId})">@Model.SubForum.Forum.Name</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.SubForum.Name</li>
+      </ol>
+    </nav>
     <a class="btn btn-primary me-2"
        href="@Url.Action("Create", "Thread", new {subForumId = Model.SubForum.Id})">New Thread</a>
 </div>

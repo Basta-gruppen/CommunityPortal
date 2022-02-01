@@ -10,6 +10,13 @@
     <script src="~/js/ToggleElement.js"></script>
 }
 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Forum")">Forums</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+  </ol>
+</nav>
+
 <div class="d-flex flex-row justify-content-between align-items-center mb-4">
     <div class="d-inline-flex align-items-center">
         <h2 id="ForumTitle" class="text-dark fw-bold m-0 me-2 fs-4 text-decoration-none text-truncate">@Model.Name</h2>
