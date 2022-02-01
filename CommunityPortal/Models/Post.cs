@@ -30,5 +30,18 @@ namespace CommunityPortal.Models
         public Category Category { get; set; }
         public ApplicationUser User { get; set; }
         public List<PostTag> PostTags { get; set; }
+
+        public static explicit operator Post(Event @event)
+        {
+            return new Post
+            {
+                Id = @event.Id,
+                UserId = @event.UserId,
+                CategoryId = "0",
+                Subject = @event.Subject,
+                Content = @event.Content,
+                Timestamp = @event.Timestamp
+            };
+        }
     }
 }

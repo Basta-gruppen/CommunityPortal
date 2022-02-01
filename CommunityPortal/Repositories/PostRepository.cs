@@ -9,6 +9,7 @@ using CommunityPortal.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CommunityPortal.Repositories
 {
@@ -32,24 +33,33 @@ namespace CommunityPortal.Repositories
 
         public PostRepository GetAll()
         {
+            var items = 
+                _context.Posts.Select(x => (Post)x)
+                    .Concat(_context.Events.Select(x => (Post)x))
+                    .OrderBy(x => x.Timestamp);
+            
             _posts = _context
                 .Posts
+                .Concat(_context.Events.Select(x => (Post)x))
                 .Include(post => post.Category)
                 .Include(post => post.User)
                 .Include(post => post.PostTags)
                 .ThenInclude(postTag => postTag.Tag)
                 .OrderByDescending(x => x.Timestamp);
-
             return this;
         }
 
         public PostRepository ByTag(string tag)
         {
-            _posts = _posts
+            var posts = _posts
                 .Where(
                     post => post.PostTags.Any(postTag => postTag.Tag.Name.Equals(tag))
                 );
 
+            if (posts.Any())
+            {
+                _posts = posts;
+            }
             return this;
         }
 
@@ -67,6 +77,16 @@ namespace CommunityPortal.Repositories
             _posts = _posts
                 .Where(
                     post => categories.Contains(post.Category.Name)
+                );
+            return this;
+        }
+        
+        public PostRepository ByKeyword(string keyword)
+        {
+            _posts = _posts
+                .Where(
+                    post => post.Subject.Contains(keyword) 
+                            || post.Content.Contains(keyword)
                 );
             return this;
         }
@@ -93,7 +113,8 @@ namespace CommunityPortal.Repositories
                     {
                         Post = post, categorySubscriber.UserId
                     }
-                ).Where(x => x.UserId.Equals(userId)).Select(p => p.Post);
+                ).Where(x => x.UserId.Equals(userId))
+                .Select(p => p.Post);
             return this;
         }
 
