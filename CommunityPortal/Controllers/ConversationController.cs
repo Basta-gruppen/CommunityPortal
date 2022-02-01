@@ -62,15 +62,17 @@ namespace CommunityPortal.Controllers
             //{
             //    return BadRequest("Conversation is created With This User Select From Conversation");
             //}
-            
-            
-                Conversation newConversation = new Conversation()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Subject = createConversation.Subject
-                };
-                dbContext.Add(newConversation);
-                dbContext.SaveChanges();
+            if(ModelState.IsValid)
+            { 
+            Conversation newConversation = new Conversation()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Subject = createConversation.Subject
+            };
+
+
+            dbContext.Add(newConversation);
+            dbContext.SaveChanges();
 
             List<UserConversation> userConversations = new List<UserConversation>()
             {
@@ -86,39 +88,18 @@ namespace CommunityPortal.Controllers
                 }
             };
 
-                dbContext.UserConversations.AddRange(userConversations);
+            dbContext.UserConversations.AddRange(userConversations);
 
-                dbContext.SaveChanges();
-            
+            dbContext.SaveChanges();
+            ViewBag.Message = "Conversation is created";
+
+
+            }
+            //return RedirectToAction("Conversation");
             return View();
         }
         
-        //public IActionResult CreateConversation()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult CreateConversation(string content,string id)
-        //{
-
-            
-        //    Message messages = new Message()
-        //    {
-                
-        //            Id=Guid.NewGuid().ToString(),
-        //            Content=content,
-        //            UserId=userManager.GetUserId(User),
-        //            ConversationId=id,
-        //            TimeStamp=new DateTime() 
-                
-        //    };
-        //    dbContext.Messages.Add(messages);
-        //    dbContext.SaveChanges();
-
-        //    return View();
-
-            
-        //}
+        
         
         public IActionResult Delete(string id)
         {
