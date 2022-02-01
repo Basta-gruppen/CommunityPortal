@@ -116,7 +116,7 @@ namespace CommunityPortal.Controllers
             if (reply.UserId == currentUserId)
             {
                 reply.Content = replyUpdateViewModel.Content;
-                // reply.QuoteId = replyUpdateViewModel.QuoteId;
+                reply.QuoteId = replyUpdateViewModel.QuoteId;
 
                 try
                 {
