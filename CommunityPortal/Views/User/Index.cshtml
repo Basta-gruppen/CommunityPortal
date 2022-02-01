@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ApplicationUser>
+
+@{
+    ViewBag.Title = "Members admin panel";
+    Layout = "_Layout";
+}
+
+<h2>Admin Panel - Members List</h2>
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    @{
+        foreach (ApplicationUser user in Model)
+        {
+            <div class="d-flex w-50 justify-content-between p-2 border-light border border-1 rounded-1 mb-1">
+                <p class="text-black m-0">@user.UserName</p>
+                <p class="text-black m-0">@user.Email</p>
+                <form action="@Url.Action("Delete", "User")" method="post">
+                    <input hidden="" name="id" value="@user.Id"/>
+                    <button class="btn btn-sm btn-danger" type="submit">Remove</button>
+                </form>
+                
+            </div>
+        }
+    }
+</div>
