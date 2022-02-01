@@ -93,7 +93,8 @@ namespace CommunityPortal.Controllers
             {
                 return View(_postRepository
                     .GetAll()
-                    .ByTag(tag));
+                    .ByTag(tag)
+                    .ToList());
             }
             _postRepository
                 .GetAll()
