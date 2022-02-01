@@ -70,7 +70,7 @@ namespace CommunityPortal.Data
                 UserName = "Admin",
                 NormalizedUserName = "ADMIN",
                 PasswordHash = hasher.HashPassword(null, "password"),
-
+                ImageURL = "/images/default-profile.png"
             });
 
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
