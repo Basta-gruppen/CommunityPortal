@@ -77,6 +77,7 @@ namespace CommunityPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Forum newForum)
         {
             if (_context.Forums.Any(f => f.Name == newForum.Name))
@@ -104,6 +105,7 @@ namespace CommunityPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             Forum forum = _context.Forums.Find(id);
@@ -123,6 +125,7 @@ namespace CommunityPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Update(Forum editedForum)
         {
             if (ModelState.IsValid)

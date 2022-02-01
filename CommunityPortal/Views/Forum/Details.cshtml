@@ -20,15 +20,20 @@
 <div class="d-flex flex-row justify-content-between align-items-center mb-4">
     <div class="d-inline-flex align-items-center">
         <h2 id="ForumTitle" class="text-dark fw-bold m-0 me-2 fs-4 text-decoration-none text-truncate">@Model.Name</h2>
-        <div id="ForumTitleEditForm" hidden="">
-            <form class="d-inline-flex flex-row me-2" method="post" action="@Url.Action("Update", "Forum")">
-                @Html.AntiForgeryToken()
-                <input hidden="" id="Id" name="Id" value="@Model.Id" required/>
-                <input class="form-control" type="text" id="Name" name="Name" value="@Model.Name" required maxlength="255"/>
-                <button class="btn btn-success" type="submit">&#10003;</button>
-            </form>
-        </div>
-        <button class="btn btn-outline-warning" onclick="ToggleElements(['ForumTitleEditForm', 'ForumTitle'])">&#9998;</button>
+        @{
+            if (User.IsInRole("Admin"))
+            {
+                <div id="ForumTitleEditForm" hidden="">
+                    <form class="d-inline-flex flex-row me-2" method="post" action="@Url.Action("Update", "Forum")">
+                        @Html.AntiForgeryToken()
+                        <input hidden="" id="Id" name="Id" value="@Model.Id" required/>
+                        <input class="form-control" type="text" id="Name" name="Name" value="@Model.Name" required maxlength="255"/>
+                        <button class="btn btn-success" type="submit">&#10003;</button>
+                    </form>
+                </div>
+                <button class="btn btn-outline-warning" onclick="ToggleElements(['ForumTitleEditForm', 'ForumTitle'])">&#9998;</button>
+            }
+        }
     </div>
     <div class="d-inline-flex flex-row align-items-start">
         <div id="CreateNewContainer" hidden>
@@ -41,11 +46,17 @@
             </form>
         </div>
         <button class="btn btn-primary me-1" onclick="ToggleElement('CreateNewContainer')">New SubForum</button>
-        <form class="d-inline-flex" method="Post" action="@Url.Action("Delete", "Forum")">
-            @Html.AntiForgeryToken()
-            <input type="hidden" value="@Model.Id" name="ID"/>
-            <button class="btn btn-danger" type="submit">Delete @Model.Name</button>
-        </form>
+        
+        @{
+             if (User.IsInRole("Admin"))
+             {
+                 <form class="d-inline-flex" method="Post" action="@Url.Action("Delete", "Forum")">
+                     @Html.AntiForgeryToken()
+                     <input type="hidden" value="@Model.Id" name="ID"/>
+                     <button class="btn btn-danger" type="submit">Delete @Model.Name</button>
+                 </form>
+             }
+         }
     </div>
 </div>
 

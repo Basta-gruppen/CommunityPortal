@@ -1,23 +1,26 @@
 ﻿@model ApplicationUser
 
 @{
-    ViewBag.Title = @Model.UserName;
+    ViewBag.Title = @Model.UserName + "'s profile";
     Layout = "_Layout";
 }
 
-<h2>@Model.UserName's Profile</h2>
-<div class="d-flex justify-content-between">
-    <div>
+<h2 class="d-flex justify-content-center mb-5">@Model.UserName's Profile</h2>
+<div class="d-flex justify-content-center" style="min-width: 0">
+    
+    <div class="d-flex flex-column justify-content-center me-5">
         <img class="img-thumbnail" src="@Model.ImageURL"/>
         <small class="m-0">Posts: @Model.Posts.Count</small>
         <small class="m-0">Threads: @Model.Threads.Count</small>
         <small class="m-0">Replies: @Model.Replies.Count</small>
     </div>
-    
-    <div>
-        <a class="link-primary" href="@Url.Action("")">Show all Posts started by @Model.UserName</a>
-        <a class="link-primary">Show all Threads started by @Model.UserName</a>
-        <a class="link-primary">Show all Replies by @Model.UserName</a>
+
+
+    <div class="d-flex flex-column align-items-end">
+        <a class="link-primary" href="#">Show all Posts started by @Model.UserName</a>
+        <a class="link-primary" href="#">Show all Threads started by @Model.UserName</a>
+        <a class="link-primary" href="#">Show all Replies by @Model.UserName</a>
     </div>
-    
+
+
 </div>
