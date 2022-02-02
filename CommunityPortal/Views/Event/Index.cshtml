@@ -4,12 +4,13 @@
     ViewData["Title"] = "Event Index";
     Layout = "_Layout";
 }
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.js"></script>
 <div class="d-flex flex-row justify-content-end mb-4">
     <a class="btn btn-primary" asp-controller="Event" asp-action="CreateEvent">New Event</a>
 </div>
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-7">
         @foreach (var ev in Model)
         {
             <div class="card mb-4">
@@ -20,28 +21,30 @@
                             <a class="nav-link active" aria-current="true">Event</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Administrators"))
                             {
-                                if (User.IsInRole("Administrators"))
-                                {
-                        <li class="nav-item">
-                            @Html.ActionLink("Edit", "EditEvent", new { eventId = ev.Id }, new { @class = "text-decoration-none nav-link link-dark"})
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Delete", "DeleteEvent", new { eventId = ev.Id }, new { @class = "text-decoration-none nav-link link-dark" })
-                        </li>
-                        }
+                                <li class="nav-item">
+                                    @Html.ActionLink("Edit", "EditEvent", new { eventId = ev.Id }, new { @class = "text-decoration-none nav-link link-dark" })
+                                </li>
+                                <li class="nav-item">
+                                    @Html.ActionLink("Delete", "DeleteEvent", new { eventId = ev.Id }, new { @class = "text-decoration-none nav-link link-dark" })
+                                </li>
                             }
+                        }
                     </ul>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">@ev.Subject</h5>
                     <p class="card-text">@ev.Content</p>
-                    <p class="card-text">Event Date :- @ev.StartDate</p>                
+                    <p class="card-text">Event Date :- @ev.StartDate</p>
                 </div>
                 <div class="card-footer small text-muted">
                     Posted @ev.Timestamp.ToString("yyyy-MM-dd HH:mm") by @ev.User
                 </div>
             </div>
         }
-        </div>
     </div>
+    <partial name="_CalendarPartial" />
+
+</div>
