@@ -70,6 +70,7 @@ namespace CommunityPortal.Controllers
                 eventData.Subject = ev.Subject;
                 eventData.Content = ev.Content;
                 eventData.StartDate = ev.StartDate;
+                eventData.EndDate = ev.EndDate;
                 eventData.Timestamp = DateTime.Now;
                 _context.Entry(eventData).State = EntityState.Modified;
                 _context.SaveChanges();

@@ -22,8 +22,8 @@ namespace CommunityPortal.Models
         public DateTime Timestamp { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
-
-           
+        [Required]
+        public DateTime EndDate { get; set; }  
 
         public ApplicationUser User { get; set; }
     }

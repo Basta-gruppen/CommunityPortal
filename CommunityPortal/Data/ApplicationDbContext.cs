@@ -263,7 +263,8 @@ namespace CommunityPortal.Data
                     Content = "We will be meeting in the town centre on the specified date.",
                     UserId = applicationUsers[0].Id,
                     Timestamp = DateTime.Now,
-                    StartDate = DateTime.Now.AddDays(3)
+                    StartDate = DateTime.Now.AddDays(3),
+                    EndDate = DateTime.Now.AddDays(4)
                 },
                 new Event()
                 {
@@ -272,7 +273,8 @@ namespace CommunityPortal.Data
                     Content = "We will begin a riot on Walmart on the second street",
                     UserId = applicationUsers[1].Id,
                     Timestamp = DateTime.Now,
-                    StartDate = DateTime.Now.AddDays(10)
+                    StartDate = DateTime.Now.AddDays(10),
+                    EndDate = DateTime.Now.AddDays(11)
                 }
             };
             builder.Entity<Event>().HasData(events);
